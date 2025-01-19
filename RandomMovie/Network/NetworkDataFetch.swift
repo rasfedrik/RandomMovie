@@ -37,6 +37,10 @@ final class NetworkDataFetch {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("Полученный JSON:\n\(jsonString)")
+                }
+                
                 let result = try decoder.decode(T.self, from: data)
                 
                 completion(.success(result))
