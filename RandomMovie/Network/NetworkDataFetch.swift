@@ -7,10 +7,14 @@
 
 import Foundation
 
-final class NetworkDataFetch {
+protocol NetworkDataFetchProtocol {
+    func fetchData<T:Codable> (endPoint: EndPoint,
+                               expecting: T.Type,
+                               completion: @escaping (Result<T, NetworkError>) -> Void)
+}
+
+final class NetworkDataFetch: NetworkDataFetchProtocol {
     static let share = NetworkDataFetch()
-    
-    private init(){}
     
     func fetchData<T:Codable> (endPoint: EndPoint,
                                expecting: T.Type,
@@ -36,11 +40,9 @@ final class NetworkDataFetch {
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
-                
-                if let jsonString = String(data: data, encoding: .utf8) {
-                    print("Полученный JSON:\n\(jsonString)")
-                }
-                
+//                if let jsonString = String(data: data, encoding: .utf8) {
+//                    print("Полученный JSON:\n\n\(jsonString)\n\n")
+//                }
                 let result = try decoder.decode(T.self, from: data)
                 
                 completion(.success(result))

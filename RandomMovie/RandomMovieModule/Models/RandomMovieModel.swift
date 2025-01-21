@@ -8,9 +8,9 @@
 
 import Foundation
 
-struct RandomMovieModel: Codable {
+struct RandomMovieModel: Codable, MoviewModelProtocol {
     
-    let id: Int
+    let id: Int?
     let name: String?
     let alternativeName: String?
     let description: String?
@@ -30,6 +30,7 @@ struct RandomMovieModel: Codable {
     let persons: [Person]?
     let seasonsInfo: [SeasonInfo]?
     let names: [Name]?
+    let externalId: ExternalId?
     let enName: String?
     let typeNumber: Int?
     let slogan: String?
@@ -40,7 +41,7 @@ struct RandomMovieModel: Codable {
     let lists: [String]?
     let createdAt: String?
     let updatedAt: String?
-    let productionCompanies: [String]?
+    let productionCompanies: [ProductionCompany]?
 
     struct Rating: Codable {
         let kp: Double?
@@ -57,7 +58,7 @@ struct RandomMovieModel: Codable {
     }
     
     struct Genre: Codable {
-        let name: String
+        let name: String?
     }
     
     // MARK: - Name
@@ -66,7 +67,7 @@ struct RandomMovieModel: Codable {
     }
     
     struct Country: Codable {
-        let name: String
+        let name: String?
     }
     
     struct Premiere: Codable {
@@ -90,18 +91,32 @@ struct RandomMovieModel: Codable {
     
     struct Logo: Codable {
         let url: String?
+        let previewUrl: String?
     }
     
     struct Person: Codable {
-        let id: Int
+        let id: Int?
         let photo: String?
         let name: String?
         let description: String?
         let profession: String?
     }
     
+    struct ProductionCompany: Codable {
+            let name: String?
+            let url: String?
+            let previewUrl: String?
+        }
+    
     struct SeasonInfo: Codable {
-        let number: Int
-        let episodesCount: Int
+        let number: Int?
+        let episodesCount: Int?
+    }
+    
+    struct ExternalId: Codable {
+        let kpHD: String?
+        let imdb: String?
+        let tmdb: Int?
     }
 }
+

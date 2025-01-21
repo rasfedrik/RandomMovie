@@ -23,7 +23,7 @@ extension EndPoint {
         
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "notNullFields", value: "id"),
-            URLQueryItem(name: "notNullFields", value: "name")
+//            URLQueryItem(name: "notNullFields", value: "name")
         ]
         
         if path.contains("movie/search") {
@@ -55,7 +55,6 @@ extension EndPoint {
             "X-API-KEY": "YHE67YR-2CEM9X3-JHKC6SR-9VWT8YB"
         ]
         
-        print(url)
         return request
     }
     
