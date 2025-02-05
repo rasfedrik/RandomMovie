@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         
-        let builder = ModuleBuilder.createRandomMoview()
+        let builder = ModuleBuilder.createRandomMovieModule()
         let navController = UINavigationController(rootViewController: builder)
         window.rootViewController = navController
         window.makeKeyAndVisible()

@@ -22,14 +22,13 @@ extension EndPoint {
         components.path = "/v1.4/" + path
         
         var queryItems: [URLQueryItem] = [
-            URLQueryItem(name: "notNullFields", value: "id"),
-//            URLQueryItem(name: "notNullFields", value: "name")
+            URLQueryItem(name: "notNullFields", value: "poster.url")
         ]
         
-        if path.contains("movie/search") {
-            queryItems.append(URLQueryItem(name: "page", value: "1"))
-            queryItems.append(URLQueryItem(name: "limit", value: "3"))
-        }
+//        if path.contains("movie/search") {
+//            queryItems.append(URLQueryItem(name: "page", value: "1"))
+//            queryItems.append(URLQueryItem(name: "limit", value: "3"))
+//        }
         
         if var existingQueryItems = components.queryItems {
             existingQueryItems.append(contentsOf: queryItems)

@@ -16,6 +16,8 @@ protocol NetworkDataFetchProtocol {
 final class NetworkDataFetch: NetworkDataFetchProtocol {
     static let share = NetworkDataFetch()
     
+    init() {}
+    
     func fetchData<T:Codable> (endPoint: EndPoint,
                                expecting: T.Type,
                                completion: @escaping (Result<T, NetworkError>) -> Void)
@@ -33,7 +35,6 @@ final class NetworkDataFetch: NetworkDataFetchProtocol {
                 } else {
                     completion(.failure(.invalidResponse("Invalid HTTP response or no data")))
                 }
-                
                 return
             }
             
@@ -44,21 +45,24 @@ final class NetworkDataFetch: NetworkDataFetchProtocol {
 //                    print("Полученный JSON:\n\n\(jsonString)\n\n")
 //                }
                 let result = try decoder.decode(T.self, from: data)
-                
                 completion(.success(result))
                 
             } catch let DecodingError.dataCorrupted(context) {
                 print("Data corrupted: \(context.debugDescription)")
                 completion(.failure(.decodingError(context.debugDescription)))
+                
             } catch let DecodingError.keyNotFound(key, context) {
                 print("Key '\(key)' not found: \(context.debugDescription)")
                 completion(.failure(.decodingError("Key '\(key)' not found: \(context.debugDescription)")))
+                
             } catch let DecodingError.typeMismatch(type, context) {
                 print("Type '\(type)' mismatch: \(context.debugDescription)")
                 completion(.failure(.decodingError("Type '\(type)' mismatch: \(context.debugDescription)")))
+                
             } catch let DecodingError.valueNotFound(value, context) {
                 print("Value '\(value)' not found: \(context.debugDescription)")
                 completion(.failure(.decodingError("Value '\(value)' not found: \(context.debugDescription)")))
+                
             } catch {
                 print("Error: \(error.localizedDescription)")
                 completion(.failure(.unknownError(error.localizedDescription)))

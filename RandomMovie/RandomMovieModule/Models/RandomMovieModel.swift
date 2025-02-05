@@ -42,7 +42,8 @@ struct RandomMovieModel: Codable, MoviewModelProtocol {
     let createdAt: String?
     let updatedAt: String?
     let productionCompanies: [ProductionCompany]?
-
+    
+    // MARK: - Rating
     struct Rating: Codable {
         let kp: Double?
         let imdb: Double?
@@ -50,6 +51,7 @@ struct RandomMovieModel: Codable, MoviewModelProtocol {
         let russianFilmCritics: Double?
     }
     
+    // MARK: - Votes
     struct Votes: Codable {
         let kp: Int?
         let imdb: Int?
@@ -57,6 +59,7 @@ struct RandomMovieModel: Codable, MoviewModelProtocol {
         let russianFilmCritics: Int?
     }
     
+    // MARK: - Genre
     struct Genre: Codable {
         let name: String?
     }
@@ -66,34 +69,41 @@ struct RandomMovieModel: Codable, MoviewModelProtocol {
         let name: String?
     }
     
+    // MARK: - Country
     struct Country: Codable {
         let name: String?
     }
     
+    // MARK: - Premiere
     struct Premiere: Codable {
         let russia: String?
     }
     
+    // MARK: - Poster
     struct Poster: Codable {
         let url: String?
         let previewUrl: String?
     }
     
+    // MARK: - Watchability
     struct Watchability: Codable {
         let items: [WatchItem]?
     }
     
+    // MARK: - WatchItem
     struct WatchItem: Codable {
         let name: String?
         let logo: Logo?
         let url: String?
     }
     
+    // MARK: - WatchItem
     struct Logo: Codable {
         let url: String?
         let previewUrl: String?
     }
     
+    // MARK: - WatchItem
     struct Person: Codable {
         let id: Int?
         let photo: String?
@@ -102,17 +112,20 @@ struct RandomMovieModel: Codable, MoviewModelProtocol {
         let profession: String?
     }
     
+    // MARK: - ProductionCompany
     struct ProductionCompany: Codable {
-            let name: String?
-            let url: String?
-            let previewUrl: String?
-        }
+        let name: String?
+        let url: String?
+        let previewUrl: String?
+    }
     
+    // MARK: - SeasonInfo
     struct SeasonInfo: Codable {
         let number: Int?
         let episodesCount: Int?
     }
     
+    // MARK: - ExternalId
     struct ExternalId: Codable {
         let kpHD: String?
         let imdb: String?
