@@ -32,7 +32,6 @@ final class RandomCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .analogousCornsilk1
         setupImageView()
         setupLabel()
     }

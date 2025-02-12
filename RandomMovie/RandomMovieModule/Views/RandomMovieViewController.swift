@@ -17,8 +17,6 @@ final class RandomMovieViewController: UIViewController {
     
     private let numberOfCells = 9
     private var updateIndexCount = 0
-    private var movieIndexes: [Int] = []
-    private var movieIndex: Int?
     
     private var moviesAddedAfterPressingButton: [PreviewForCollectionViewCellModel?] = []
     
@@ -26,7 +24,6 @@ final class RandomMovieViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .cornsilk
-        fillingAnArray()
         randomButton.addTarget(self,
                                action: #selector(randomMovieTapped),
                                for: .touchUpInside)
@@ -44,37 +41,17 @@ final class RandomMovieViewController: UIViewController {
     
     @objc private func startOverTapped() {
         updateIndexCount = 0
-        fillingAnArray()
-        randomButton.isEnabled = true
-    }
-    
-    private func fillingAnArray() {
-        var count = 0
         moviesAddedAfterPressingButton = []
         moviesViewWithCollectionView.collectionView.reloadData()
-        
-        let movie = PreviewForCollectionViewCellModel(name: nil, alternativeName: nil, poster: nil)
-        
-        while count != numberOfCells {
-            moviesAddedAfterPressingButton.append(movie)
-            count += 1
-        }
+        randomButton.isEnabled = true
     }
     
     private func addingToCell(movie: PreviewForCollectionViewCellModel) {
         updateIndexCount += 1
-        for (index, _) in moviesAddedAfterPressingButton.enumerated() {
-            if (index + 1) == updateIndexCount {
-                moviesAddedAfterPressingButton.remove(at: index)
-                moviesAddedAfterPressingButton.insert(movie, at: index)
-            }
-        }
-        isEnableRandomButton()
-    }
-    
-    private func isEnableRandomButton() {
-        if updateIndexCount == numberOfCells {
-            updateIndexCount = 1
+        moviesAddedAfterPressingButton.append(movie)
+        moviesViewWithCollectionView.collectionView.reloadData()
+        
+        if numberOfCells == updateIndexCount {
             randomButton.isEnabled = false
             randomButton.backgroundColor = .systemGray4
         }
@@ -94,7 +71,6 @@ final class RandomMovieViewController: UIViewController {
         moviesViewWithCollectionView.collectionView.delegate = self
         moviesViewWithCollectionView.collectionView.dataSource = self
     }
-    
     private func setupButtons() {
         view.addSubview(randomButton)
         NSLayoutConstraint.activate([
@@ -167,16 +143,8 @@ extension RandomMovieViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let movie = moviesAddedAfterPressingButton[indexPath.row]
-        
-        if (movie?.name == nil || movie?.alternativeName == nil) && movie?.poster == nil {
-            if !movieIndexes.contains(indexPath.row) {
-                movieIndex = indexPath.row
-                movieIndexes.append(indexPath.row)
-            }
-        } else {
-            let detailViewController = ModuleBuilder.createMovieDetailsModule(movie: movie)
-            navigationController?.pushViewController(detailViewController, animated: true)
-        }
+        let detailViewController = ModuleBuilder.createMovieDetailsModule(movie: movie)
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
 }
 
