@@ -9,11 +9,11 @@ import UIKit
 
 protocol Builder {
     static func createRandomMovieModule() -> UIViewController
-    static func createMovieDetailsModule(movie: RandomMovieModel?) -> UIViewController
+    static func createMovieDetailsModule(movie: MoviewModelProtocol?) -> UIViewController
 }
 
 final class ModuleBuilder: Builder {
-    
+    // MARK: - RandomMovieModule
     static func createRandomMovieModule() -> UIViewController {
         let view = RandomMovieViewController()
         let networkService = NetworkDataFetch()
@@ -22,11 +22,11 @@ final class ModuleBuilder: Builder {
         
         return view
     }
-    
-    static func createMovieDetailsModule(movie: RandomMovieModel?) -> UIViewController {
+    // MARK: - MovieDetailsModule
+    static func createMovieDetailsModule(movie: MoviewModelProtocol?) -> UIViewController {
         let view = MovieDetailsViewController()
         let networkService = NetworkDataFetch()
-        let presenter = MovieDetailsPresenter(view: view, networkService: networkService, movie: movie)
+        let presenter = MovieDetailsPresenter(view: view, networkService: networkService, movie: movie as? RandomMovieModel)
         
         view.presenter = presenter
         

@@ -21,7 +21,7 @@ extension EndPoint {
         components.host = "api.kinopoisk.dev"
         components.path = "/v1.4/" + path
         
-        var queryItems: [URLQueryItem] = [
+        let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "notNullFields", value: "poster.url")
         ]
         

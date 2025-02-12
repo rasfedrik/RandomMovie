@@ -17,6 +17,8 @@ final class RandomMovieViewController: UIViewController {
     
     private let numberOfCells = 9
     private var updateIndexCount = 0
+    private var movieIndexes: [Int] = []
+    private var movieIndex: Int?
     
     private var moviesAddedAfterPressingButton: [PreviewForCollectionViewCellModel?] = []
     
@@ -162,6 +164,19 @@ extension RandomMovieViewController: UICollectionViewDataSource {
 }
 
 extension RandomMovieViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let movie = moviesAddedAfterPressingButton[indexPath.row]
+        
+        if (movie?.name == nil || movie?.alternativeName == nil) && movie?.poster == nil {
+            if !movieIndexes.contains(indexPath.row) {
+                movieIndex = indexPath.row
+                movieIndexes.append(indexPath.row)
+            }
+        } else {
+            let detailViewController = ModuleBuilder.createMovieDetailsModule(movie: movie)
+            navigationController?.pushViewController(detailViewController, animated: true)
+        }
+    }
 }
 
