@@ -19,6 +19,7 @@ final class RandomMovieViewController: UIViewController {
     private var updateIndexCount = 0
     
     private var moviesAddedAfterPressingButton: [PreviewForCollectionViewCellModel?] = []
+    private var goToDescriptionMovie: [RandomMovieModel?] = []
     
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
@@ -30,6 +31,7 @@ final class RandomMovieViewController: UIViewController {
         startOverButton.addTarget(self,
                                   action: #selector(startOverTapped),
                                   for: .touchUpInside)
+        loadMovieFromUserDefaults()
         setupCollectionView()
         setupButtons()
     }
@@ -41,12 +43,15 @@ final class RandomMovieViewController: UIViewController {
     
     @objc private func startOverTapped() {
         updateIndexCount = 0
+        saveMovieToUserDefaults()
         moviesAddedAfterPressingButton = []
+        goToDescriptionMovie = []
         moviesViewWithCollectionView.collectionView.reloadData()
         randomButton.isEnabled = true
+        saveMovieToUserDefaults()
     }
     
-    private func addingToCell(movie: PreviewForCollectionViewCellModel) {
+    private func addingToCell(movie: PreviewForCollectionViewCellModel?) {
         updateIndexCount += 1
         moviesAddedAfterPressingButton.append(movie)
         moviesViewWithCollectionView.collectionView.reloadData()
@@ -55,6 +60,30 @@ final class RandomMovieViewController: UIViewController {
             randomButton.isEnabled = false
             randomButton.backgroundColor = .systemGray4
         }
+        saveMovieToUserDefaults()
+    }
+    
+    private func saveMovieToUserDefaults() {
+        let encoder = JSONEncoder()
+        if let encodedMovies = try? encoder.encode(goToDescriptionMovie),
+           let encodedPreviews = try? encoder.encode(moviesAddedAfterPressingButton) {
+            UserDefaults.standard.set(encodedMovies, forKey: "savedMovies")
+            UserDefaults.standard.set(encodedPreviews, forKey: "savedPreviews")
+        }
+    }
+    
+    private func loadMovieFromUserDefaults() {
+        let decoder = JSONDecoder()
+        if let savedMoviesData = UserDefaults.standard.data(forKey: "savedMovies"),
+           let savedMovies = try? decoder.decode([RandomMovieModel].self, from: savedMoviesData),
+           let savedPreviewsData = UserDefaults.standard.data(forKey: "savedPreviews"),
+           let savedPreviews = try? decoder.decode([PreviewForCollectionViewCellModel].self, from: savedPreviewsData) {
+            goToDescriptionMovie = savedMovies
+            moviesAddedAfterPressingButton = savedPreviews
+            updateIndexCount = moviesAddedAfterPressingButton.count
+            moviesViewWithCollectionView.collectionView.reloadData()
+        }
+           
     }
     
     // MARK: - Constraints
@@ -100,13 +129,14 @@ extension RandomMovieViewController: RandomMovieViewProtocol {
             guard let posterData = posterData else { return }
             guard let posterImage = UIImage(data: posterData) else { return }
             
-            let movie = PreviewForCollectionViewCellModel(
+            let previewMovie = PreviewForCollectionViewCellModel(
                 name: presenterData.name,
                 alternativeName: presenterData.alternativeName,
                 poster: posterImage
             )
             
-            self.addingToCell(movie: movie)
+            self.goToDescriptionMovie.append(presenterData)
+            self.addingToCell(movie: previewMovie)
             self.moviesViewWithCollectionView.collectionView.reloadData()
         }
     }
@@ -130,19 +160,17 @@ extension RandomMovieViewController: UICollectionViewDataSource {
         else { return UICollectionViewCell() }
         
         if let movie = moviesAddedAfterPressingButton[indexPath.item] {
-            cell.configure(with: movie.poster ?? nil,
+            cell.configure(with: movie.getPosterImage() ?? nil,
                            text: movie.name ?? movie.alternativeName)
         }
         
         return cell
     }
-    
 }
 
 extension RandomMovieViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        let movie = moviesAddedAfterPressingButton[indexPath.row]
+        let movie = goToDescriptionMovie[indexPath.row]
         let detailViewController = ModuleBuilder.createMovieDetailsModule(movie: movie)
         navigationController?.pushViewController(detailViewController, animated: true)
     }

@@ -22,7 +22,7 @@ final class MovieDetailsViewController: UIViewController {
 extension MovieDetailsViewController: MovieDetailsViewProtocol {
     
     func openMovie(details: RandomMovieModel?) {
-        print(details?.name ?? "")
+        print(details?.name ?? details?.alternativeName ?? "none")
     }
     
 }
