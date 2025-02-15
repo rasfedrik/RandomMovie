@@ -7,14 +7,18 @@
 
 import UIKit
 
-final class MovieDetailsViewController: UIViewController {
+final class MovieDetailsViewController: BaseViewController {
     
     var presenter: MovieDetailsPresenter!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .orange
         presenter.openMovieDetails()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
     }
     
 }

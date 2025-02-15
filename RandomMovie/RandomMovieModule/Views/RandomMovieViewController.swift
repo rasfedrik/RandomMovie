@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class RandomMovieViewController: UIViewController {
+final class RandomMovieViewController: BaseViewController {
     
     // MARK: - Properties
     var presenter: RandomMoviewPresenterProtocol!
@@ -24,7 +24,6 @@ final class RandomMovieViewController: UIViewController {
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .cornsilk
         randomButton.addTarget(self,
                                action: #selector(randomMovieTapped),
                                for: .touchUpInside)
@@ -34,6 +33,11 @@ final class RandomMovieViewController: UIViewController {
         loadMovieFromUserDefaults()
         setupCollectionView()
         setupButtons()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
     }
     
     // MARK: - Methods
