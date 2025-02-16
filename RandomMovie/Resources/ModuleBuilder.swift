@@ -10,7 +10,7 @@ import UIKit
 protocol Builder {
     static func createTapBarController() -> UITabBarController
     static func createRandomMovieModule() -> UIViewController
-    static func createMovieDetailsModule(movie: RandomMovieModel?) -> UIViewController
+    static func createMovieDetailsModule(movie: RandomMovieModel?, posterData: PreviewForCollectionViewCellModel?) -> UIViewController
     static func createFavoriteMovie() -> UIViewController
 }
 
@@ -45,10 +45,11 @@ final class ModuleBuilder: Builder {
     }
     
     // MARK: - MovieDetailsModule
-    static func createMovieDetailsModule(movie: RandomMovieModel?) -> UIViewController {
+    static func createMovieDetailsModule(movie: RandomMovieModel?, posterData: PreviewForCollectionViewCellModel?) -> UIViewController {
         let view = MovieDetailsViewController()
         let networkService = NetworkDataFetch()
-        let presenter = MovieDetailsPresenter(view: view, networkService: networkService, movie: movie)
+        let presenter = MovieDetailsPresenter(view: view, networkService: networkService, movie: movie, posterData: posterData)
+        
         view.presenter = presenter
         
         return view

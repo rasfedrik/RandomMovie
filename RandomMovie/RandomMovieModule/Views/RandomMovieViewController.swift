@@ -15,7 +15,7 @@ final class RandomMovieViewController: BaseViewController {
     private let startOverButton = RandomButton(type: .startOver)
     private let moviesViewWithCollectionView = RandomMoviesViewWithCollectionView()
     
-    private let numberOfCells = 9
+    private let numberOfCells = 2
     private var updateIndexCount = 0
     
     private var moviesAddedAfterPressingButton: [PreviewForCollectionViewCellModel?] = []
@@ -33,11 +33,6 @@ final class RandomMovieViewController: BaseViewController {
         loadMovieFromUserDefaults()
         setupCollectionView()
         setupButtons()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tabBarController?.tabBar.isHidden = false
     }
     
     // MARK: - Methods
@@ -124,6 +119,7 @@ final class RandomMovieViewController: BaseViewController {
     
 }
 
+// MARK: - Extensions
 extension RandomMovieViewController: RandomMovieViewProtocol {
     
     func success(posterData: Data?) {
@@ -175,7 +171,9 @@ extension RandomMovieViewController: UICollectionViewDataSource {
 extension RandomMovieViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let movie = goToDescriptionMovie[indexPath.row]
-        let detailViewController = ModuleBuilder.createMovieDetailsModule(movie: movie)
+//        let detailViewController = ModuleBuilder.createMovieDetailsModule(movie: movie)
+        let posterData = moviesAddedAfterPressingButton[indexPath.row]
+        let detailViewController = ModuleBuilder.createMovieDetailsModule(movie: movie, posterData: posterData)
         navigationController?.pushViewController(detailViewController, animated: true)
     }
 }

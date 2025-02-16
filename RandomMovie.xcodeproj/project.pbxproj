@@ -29,6 +29,8 @@
 		D8DAEAEE2D60B0D90001714E /* FavoriteMovieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DAEAED2D60B0D90001714E /* FavoriteMovieViewController.swift */; };
 		D8DAEAF22D60B1220001714E /* FavoriteMoviePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DAEAF12D60B1220001714E /* FavoriteMoviePresenter.swift */; };
 		D8DAEAF42D60CF150001714E /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DAEAF32D60CF150001714E /* BaseViewController.swift */; };
+		D8DAEAF72D60DCFC0001714E /* MovieDetailsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DAEAF62D60DCFC0001714E /* MovieDetailsScrollView.swift */; };
+		D8DAEAF92D60DDD80001714E /* BaseLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DAEAF82D60DDD80001714E /* BaseLabel.swift */; };
 		D8EB1E1A2D3CDC700030DB49 /* RandomMovieModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8EB1E192D3CDC700030DB49 /* RandomMovieModel.swift */; };
 		D8EB1E1E2D3CFFAC0030DB49 /* RandomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8EB1E1D2D3CFFAC0030DB49 /* RandomButton.swift */; };
 /* End PBXBuildFile section */
@@ -58,6 +60,8 @@
 		D8DAEAED2D60B0D90001714E /* FavoriteMovieViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMovieViewController.swift; sourceTree = "<group>"; };
 		D8DAEAF12D60B1220001714E /* FavoriteMoviePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMoviePresenter.swift; sourceTree = "<group>"; };
 		D8DAEAF32D60CF150001714E /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		D8DAEAF62D60DCFC0001714E /* MovieDetailsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailsScrollView.swift; sourceTree = "<group>"; };
+		D8DAEAF82D60DDD80001714E /* BaseLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLabel.swift; sourceTree = "<group>"; };
 		D8EB1E192D3CDC700030DB49 /* RandomMovieModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomMovieModel.swift; sourceTree = "<group>"; };
 		D8EB1E1D2D3CFFAC0030DB49 /* RandomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -167,6 +171,7 @@
 		D817B7452D412B4600D6641F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D8DAEAF62D60DCFC0001714E /* MovieDetailsScrollView.swift */,
 				D817B7482D412FE100D6641F /* MovieDetailsViewController.swift */,
 			);
 			path = Views;
@@ -186,6 +191,7 @@
 			children = (
 				D8A533302D464AC00066AB00 /* UIColorExtensions.swift */,
 				D8DAEAF32D60CF150001714E /* BaseViewController.swift */,
+				D8DAEAF82D60DDD80001714E /* BaseLabel.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -315,6 +321,7 @@
 				D8DAEAEE2D60B0D90001714E /* FavoriteMovieViewController.swift in Sources */,
 				D817B73D2D3E88E800D6641F /* RandomMoviewPresenter.swift in Sources */,
 				D817B74B2D4136EE00D6641F /* RandomMoviesViewWithCollectionView.swift in Sources */,
+				D8DAEAF72D60DCFC0001714E /* MovieDetailsScrollView.swift in Sources */,
 				D8714F152D3980180036DBBC /* SearchMovieModel.swift in Sources */,
 				D817B7492D412FE100D6641F /* MovieDetailsViewController.swift in Sources */,
 				D8DAEAF22D60B1220001714E /* FavoriteMoviePresenter.swift in Sources */,
@@ -323,6 +330,7 @@
 				D817B73F2D3E8A1D00D6641F /* MoviewModelProtocol.swift in Sources */,
 				D8EB1E1E2D3CFFAC0030DB49 /* RandomButton.swift in Sources */,
 				D8A533332D4936650066AB00 /* ImageLoader.swift in Sources */,
+				D8DAEAF92D60DDD80001714E /* BaseLabel.swift in Sources */,
 				D8A533312D464AC00066AB00 /* UIColorExtensions.swift in Sources */,
 				D8DAEAF42D60CF150001714E /* BaseViewController.swift in Sources */,
 				D8EB1E1A2D3CDC700030DB49 /* RandomMovieModel.swift in Sources */,

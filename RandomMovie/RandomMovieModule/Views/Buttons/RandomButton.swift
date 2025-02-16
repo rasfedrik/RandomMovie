@@ -9,7 +9,6 @@ import UIKit
 
 final class RandomButton: UIButton {
     
-    private var gradientLayer = CAGradientLayer()
     private var shadowLayer: CAShapeLayer!
     
     //MARK: - TypeButtons
@@ -22,26 +21,19 @@ final class RandomButton: UIButton {
     init(type button: TypeButtons) {
         super.init(frame: .zero)
         self.translatesAutoresizingMaskIntoConstraints = false
+        setupLayer()
         self.configuration = configuration(button: button)
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        self.configuration = configuration(button: .randomMovie)
     }
     
-    override func layoutSublayers(of layer: CALayer) {
-        super.layoutSublayers(of: layer)
-        if layer == self.layer {
-            gradientLayer.frame = bounds
-            gradientLayer.cornerRadius = layer.cornerRadius
-        }
-    }
+    
     
     // MARK: - Button Configuration
     private func configuration(button type: TypeButtons) -> UIButton.Configuration {
-        
-        layer.cornerRadius = 30
-        
         var configuration = UIButton.Configuration.filled()
         configuration.baseBackgroundColor = .analogousCornsilk1
         configuration.baseForegroundColor = .aestheticComplementaryCornsilk
@@ -52,34 +44,30 @@ final class RandomButton: UIButton {
             return outgoing
         })
         
-//        layer.borderWidth = 0.5
-//        layer.borderColor = UIColor.cornsilk.cgColor
-        layer.cornerCurve = .continuous
-        layer.shadowOpacity = 0.2
-        layer.shadowColor = UIColor.aestheticComplementaryCornsilk.cgColor
-        layer.shadowOffset = .init(width: .zero, height: 8)
-        layer.shadowRadius = 10
-        
         configurationUpdateHandler = { button in
-            if button.isHighlighted {
-                UIView.animate(withDuration: 0.1) {
-                    button.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-                }
-            } else {
-                UIView.animate(withDuration: 0.1) {
-                    button.transform = CGAffineTransform(scaleX: 1, y: 1)
-                }
+            UIView.animate(withDuration: 0.15) {
+                button.transform = button.isHighlighted ? CGAffineTransform(scaleX: 0.95, y: 0.95) : .identity
+                button.alpha = button.isHighlighted ? 0.8 : 1
             }
         }
         
         switch type {
         case .randomMovie:
             configuration.title = "Cлучайный фильм"
-
+            
         case .startOver:
             configuration.title = "Начать сначала"
         }
         
         return configuration
+    }
+    
+    private func setupLayer() {
+        layer.cornerRadius = 30
+        layer.cornerCurve = .continuous
+        layer.shadowOpacity = 0.2
+        layer.shadowColor = UIColor.aestheticComplementaryCornsilk.cgColor
+        layer.shadowOffset = .init(width: .zero, height: 8)
+        layer.shadowRadius = 10
     }
 }

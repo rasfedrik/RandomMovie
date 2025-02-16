@@ -13,16 +13,13 @@ final class RandomCollectionViewCell: UICollectionViewCell {
     static let id = "CollectionViewCell"
     
     // MARK: - Elements
-    private var movieNameLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
+    private var movieNameLabel: BaseLabel = {
+        let label = BaseLabel()
         label.textAlignment = .center
-        label.textColor = .aestheticComplementaryCornsilk
-        label.numberOfLines = 0
         return label
     }()
     
-    private lazy var posterImageView: UIImageView = {
+    private var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
