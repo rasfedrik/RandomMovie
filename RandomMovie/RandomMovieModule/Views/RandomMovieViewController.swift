@@ -25,7 +25,7 @@ final class RandomMovieViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         randomButton.addTarget(self,
-                               action: #selector(randomMovieTapped),
+                               action: #selector(randomMoviesTapped),
                                for: .touchUpInside)
         startOverButton.addTarget(self,
                                   action: #selector(startOverTapped),
@@ -36,17 +36,19 @@ final class RandomMovieViewController: BaseViewController {
     }
     
     // MARK: - Methods
-    @objc private func randomMovieTapped() {
-        presenter.getData()
+    @objc private func randomMoviesTapped() {
+        for _ in (1...numberOfCells) {
+            presenter.getData()
+        }
     }
     
     @objc private func startOverTapped() {
         updateIndexCount = 0
         moviesAddedAfterPressingButton = []
         goToDescriptionMovie = []
+        randomButton.isEnabled = true
         saveMovieToUserDefaults()
         moviesViewWithCollectionView.collectionView.reloadData()
-        randomButton.isEnabled = true
     }
     
     private func addingToCell(movie: PreviewForCollectionViewCellModel?) {
@@ -68,15 +70,22 @@ final class RandomMovieViewController: BaseViewController {
            let encodedPreviews = try? encoder.encode(moviesAddedAfterPressingButton) {
             UserDefaults.standard.set(encodedMovies, forKey: "savedMovies")
             UserDefaults.standard.set(encodedPreviews, forKey: "savedPreviews")
+            UserDefaults.standard.set(randomButton.isEnabled, forKey: "savedButtonsCondition")
         }
     }
     
     private func loadMovieFromUserDefaults() {
         let decoder = JSONDecoder()
+        
+        let savedButtonsCondition = UserDefaults.standard.bool(forKey: "savedButtonsCondition")
+        
         if let savedMoviesData = UserDefaults.standard.data(forKey: "savedMovies"),
            let savedMovies = try? decoder.decode([RandomMovieModel].self, from: savedMoviesData),
+           
            let savedPreviewsData = UserDefaults.standard.data(forKey: "savedPreviews"),
            let savedPreviews = try? decoder.decode([PreviewForCollectionViewCellModel].self, from: savedPreviewsData) {
+            
+            randomButton.isEnabled = savedButtonsCondition
             goToDescriptionMovie = savedMovies
             moviesAddedAfterPressingButton = savedPreviews
             updateIndexCount = moviesAddedAfterPressingButton.count
