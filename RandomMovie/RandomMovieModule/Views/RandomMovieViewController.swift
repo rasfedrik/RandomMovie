@@ -42,12 +42,11 @@ final class RandomMovieViewController: BaseViewController {
     
     @objc private func startOverTapped() {
         updateIndexCount = 0
-        saveMovieToUserDefaults()
         moviesAddedAfterPressingButton = []
         goToDescriptionMovie = []
+        saveMovieToUserDefaults()
         moviesViewWithCollectionView.collectionView.reloadData()
         randomButton.isEnabled = true
-        saveMovieToUserDefaults()
     }
     
     private func addingToCell(movie: PreviewForCollectionViewCellModel?) {
@@ -58,6 +57,7 @@ final class RandomMovieViewController: BaseViewController {
         if numberOfCells == updateIndexCount {
             randomButton.isEnabled = false
             randomButton.backgroundColor = .systemGray4
+            saveMovieToUserDefaults()
         }
         saveMovieToUserDefaults()
     }
@@ -171,7 +171,6 @@ extension RandomMovieViewController: UICollectionViewDataSource {
 extension RandomMovieViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let movie = goToDescriptionMovie[indexPath.row]
-//        let detailViewController = ModuleBuilder.createMovieDetailsModule(movie: movie)
         let posterData = moviesAddedAfterPressingButton[indexPath.row]
         let detailViewController = ModuleBuilder.createMovieDetailsModule(movie: movie, posterData: posterData)
         navigationController?.pushViewController(detailViewController, animated: true)
