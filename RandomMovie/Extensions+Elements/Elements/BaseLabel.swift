@@ -11,7 +11,6 @@ class BaseLabel: UILabel {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        textColor = .aestheticComplementaryCornsilk
         font = UIFont.systemFont(ofSize: 18)
         translatesAutoresizingMaskIntoConstraints = false
         numberOfLines = 0

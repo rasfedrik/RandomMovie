@@ -15,7 +15,7 @@ final class MovieDetailsViewController: BaseViewController {
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.openMovieDetails()
+        presenter.fetchMovieDetails()
         setupScrollView()
     }
     
@@ -34,17 +34,25 @@ final class MovieDetailsViewController: BaseViewController {
 
 // MARK: - Extensions
 extension MovieDetailsViewController: MovieDetailsViewProtocol {
-    
-    func openMovie(details: RandomMovieModel?, posterData: PreviewForCollectionViewCellModel?) {
+    func success(movieDetails: RandomMovieModel?, posterData: Data?) {
         
-        var name = details?.name ?? details?.alternativeName ?? ""
-        let year = details?.year ?? 0
+        var name = movieDetails?.name ?? movieDetails?.alternativeName ?? "Название отсутствует"
+        
+        let year = movieDetails?.year ?? 0
         name += " (\(year))"
         
-        let description = details?.description ?? "Нет описания"
-        let posterImage = posterData?.getPosterImage()
+        let description = movieDetails?.description ?? "Нет описания"
+        
+        var posterImage: UIImage?
+        if let data = posterData {
+            posterImage = UIImage(data: data)
+        }
         
         scrollView.configure(posterImage: posterImage, movieName: name, description: description)
+    }
+    
+    func failure(error: Error) {
+        print(error)
     }
     
 }

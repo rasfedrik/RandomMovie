@@ -1,5 +1,5 @@
 //
-//  RandomButton.swift
+//  BaseButton.swift
 //  RandomMovie
 //
 //  Created by Семён Беляков on 19.01.2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class RandomButton: UIButton {
+final class BaseButton: UIButton {
     
     private var shadowLayer: CAShapeLayer!
     
@@ -15,6 +15,7 @@ final class RandomButton: UIButton {
     enum TypeButtons {
         case randomMovie
         case startOver
+        case applyFilters
     }
     
     //MARK: - init
@@ -35,9 +36,7 @@ final class RandomButton: UIButton {
     // MARK: - Button Configuration
     private func configuration(button type: TypeButtons) -> UIButton.Configuration {
         var configuration = UIButton.Configuration.filled()
-        configuration.baseBackgroundColor = .analogousCornsilk1
-        configuration.baseForegroundColor = .aestheticComplementaryCornsilk
-        configuration.cornerStyle = .capsule
+        configuration.baseBackgroundColor = .turquoise
         configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({ incoming in
             var outgoing = incoming
             outgoing.font = UIFont.preferredFont(forTextStyle: .callout)
@@ -57,8 +56,10 @@ final class RandomButton: UIButton {
             
         case .startOver:
             configuration.title = "Начать сначала"
-        }
         
+        case .applyFilters:
+            configuration.title = "Применить"
+        }
         return configuration
     }
     
@@ -66,7 +67,6 @@ final class RandomButton: UIButton {
         layer.cornerRadius = 30
         layer.cornerCurve = .continuous
         layer.shadowOpacity = 0.2
-        layer.shadowColor = UIColor.aestheticComplementaryCornsilk.cgColor
         layer.shadowOffset = .init(width: .zero, height: 8)
         layer.shadowRadius = 10
     }

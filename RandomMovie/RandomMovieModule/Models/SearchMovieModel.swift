@@ -27,7 +27,7 @@ struct SearchMovieModel: Codable, MoviewModelProtocol {
         let ageRating: Int?
         let top10: Int?
         let top250, typeNumber: Int?
-        //    let status: Int?
+        let status: Int?
         let releaseYears: [ReleaseYears?]?
     }
     

@@ -27,10 +27,18 @@ final class RandomCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
+    private var starImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "star.fill"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupImageView()
-        setupLabel()
+        setupElements()
     }
     
     required init?(coder: NSCoder) {
@@ -39,21 +47,27 @@ final class RandomCollectionViewCell: UICollectionViewCell {
     
     
     // MARK: - Constrains
-    private func setupImageView() {
+    private func setupElements() {
         addSubview(posterImageView)
         NSLayoutConstraint.activate([
             posterImageView.topAnchor.constraint(equalTo: topAnchor),
             posterImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.8),
             posterImageView.widthAnchor.constraint(equalTo: widthAnchor)
         ])
-    }
-    
-    private func setupLabel() {
+        
         addSubview(movieNameLabel)
         NSLayoutConstraint.activate([
             movieNameLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 2),
             movieNameLabel.widthAnchor.constraint(equalTo: widthAnchor),
             movieNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
+        ])
+        
+        addSubview(starImageView)
+        NSLayoutConstraint.activate([
+            starImageView.topAnchor.constraint(equalTo: posterImageView.topAnchor, constant: 5),
+            starImageView.trailingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: -5),
+            starImageView.widthAnchor.constraint(equalToConstant: 30),
+            starImageView.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
     

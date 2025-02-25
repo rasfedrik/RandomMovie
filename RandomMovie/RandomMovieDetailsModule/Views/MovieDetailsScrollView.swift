@@ -78,7 +78,7 @@ final class MovieDetailsScrollView: UIScrollView {
     
     func configure(posterImage: UIImage?, movieName: String?, description: String?) {
         
-        self.posterImageView.image = posterImage
+        self.posterImageView.image = posterImage ?? UIImage(named: "placeholder")
         self.movieNameLabel.text = movieName
         self.descriptionLabel.text = description
     }

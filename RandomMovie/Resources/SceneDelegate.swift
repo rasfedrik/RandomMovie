@@ -16,9 +16,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         
-        let builder = ModuleBuilder.createTapBarController()
-//        let navController = UINavigationController(rootViewController: builder)
-        window.rootViewController = builder
+        let tapBarRouter = TapBarRouter()
+        window.rootViewController = tapBarRouter.createTapBarController()
         window.makeKeyAndVisible()
         self.window = window
     }

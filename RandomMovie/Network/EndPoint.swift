@@ -9,64 +9,93 @@ import Foundation
 
 struct EndPoint {
     
-    public var path: String
-}
-
-extension EndPoint {
+    enum TypeEndPoint: String {
+        case random = "random"
+    }
+    
+    enum ContemtType: String {
+        case movie = "movie/"
+    }
+    
+    private var id = "0"
+    private let apiVersion = "/v1.4/"
+    private var path: String
+    
+    public var filters: [String:String]?
+    private var additionalQueryItems: [URLQueryItem]?
+    
     
     private var url: URL {
-        
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.kinopoisk.dev"
-        components.path = "/v1.4/" + path
+        components.path = apiVersion + ContemtType.movie.rawValue + path
         
-        let queryItems: [URLQueryItem] = [
+        var queryItems: [URLQueryItem] = [
+            URLQueryItem(name: "notNullFields", value: "id"),
             URLQueryItem(name: "notNullFields", value: "poster.url")
         ]
         
-//        if path.contains("movie/search") {
-//            queryItems.append(URLQueryItem(name: "page", value: "1"))
-//            queryItems.append(URLQueryItem(name: "limit", value: "3"))
-//        }
-        
-        if var existingQueryItems = components.queryItems {
-            existingQueryItems.append(contentsOf: queryItems)
-            components.queryItems = existingQueryItems
-        } else {
-            components.queryItems = queryItems
+        if let additionalQueryItems = additionalQueryItems {
+            queryItems.append(contentsOf: additionalQueryItems)
         }
+        
+        //        if path.contains("movie/search") {
+        //            queryItems.append(URLQueryItem(name: "page", value: "1"))
+        //            queryItems.append(URLQueryItem(name: "limit", value: "3"))
+        //        }
+        
+        //        if let filters = filters {
+        //            for (name, value) in filters {
+        //                queryItems.append(URLQueryItem(name: name, value: value))
+        //            }
+        //        }
+        
+        //        if var existingQueryItems = components.queryItems {
+        //            existingQueryItems.append(contentsOf: queryItems)
+        //            components.queryItems = existingQueryItems
+        //        } else {
+        //            components.queryItems = queryItems
+        //        }
+        
+        components.queryItems = (components.queryItems ?? []) + queryItems
         
         guard let url = components.url else {
             preconditionFailure("Invalid URL components: \(components)")
         }
         
+        print(url)
         return url
     }
     
+    
     var request: URLRequest {
-        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.timeoutInterval = 20
-        request.allHTTPHeaderFields = [
-            "accept": "application/json",
-            "X-API-KEY": "YHE67YR-2CEM9X3-JHKC6SR-9VWT8YB"
-        ]
         
+        var headerFields = Constants.apiKey
+        headerFields["accept"] = "application/json"
+        request.allHTTPHeaderFields = headerFields
         return request
     }
     
 }
 
 extension EndPoint {
-    
-    static var random: Self {
-        return EndPoint(path: "movie/random")
+    static func random() -> Self {
+        return EndPoint(path: TypeEndPoint.random.rawValue)
     }
     
-    static var search: Self {
-        return EndPoint(path: "movie/search")
+    static func details(with id: Int?) -> Self {
+        return EndPoint(path: "\(id ?? 0)")
     }
     
+//    static func details(withId: Int? = nil, additionalQueryItems: [URLQueryItem]? = nil) -> Self {
+//        return EndPoint(
+//            path: TypeEndPoint.random.rawValue,
+//            additionalQueryItems:
+//                [URLQueryItem(name: "id", value: "\(withId ?? 0)")]
+//        )
+//    }
 }

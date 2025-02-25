@@ -11,10 +11,13 @@ protocol NetworkDataFetchProtocol {
     func fetchData<T:Codable> (endPoint: EndPoint,
                                expecting: T.Type,
                                completion: @escaping (Result<T, NetworkError>) -> Void)
+    func cancelRequests()
 }
 
 final class NetworkDataFetch: NetworkDataFetchProtocol {
+    
     static let share = NetworkDataFetch()
+    private var dataTask: URLSessionDataTask?
     
     init() {}
     
@@ -22,7 +25,7 @@ final class NetworkDataFetch: NetworkDataFetchProtocol {
                                expecting: T.Type,
                                completion: @escaping (Result<T, NetworkError>) -> Void)
     {
-        URLSession.shared.dataTask(with: endPoint.request) { data, response, error in
+        dataTask = URLSession.shared.dataTask(with: endPoint.request) { data, response, error in
             
             guard
                 let httpResponse = response as? HTTPURLResponse,
@@ -67,6 +70,11 @@ final class NetworkDataFetch: NetworkDataFetchProtocol {
                 print("Error: \(error.localizedDescription)")
                 completion(.failure(.unknownError(error.localizedDescription)))
             }
-        }.resume()
+        }
+        dataTask?.resume()
+    }
+    
+    func cancelRequests() {
+        dataTask?.cancel()
     }
 }

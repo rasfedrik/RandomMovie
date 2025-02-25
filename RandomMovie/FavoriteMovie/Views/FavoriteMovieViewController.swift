@@ -13,7 +13,6 @@ final class FavoriteMovieViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(presenter.getDataFromUserDefaults().count)
     }
     
 }
