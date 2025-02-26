@@ -40,24 +40,6 @@ struct EndPoint {
             queryItems.append(contentsOf: additionalQueryItems)
         }
         
-        //        if path.contains("movie/search") {
-        //            queryItems.append(URLQueryItem(name: "page", value: "1"))
-        //            queryItems.append(URLQueryItem(name: "limit", value: "3"))
-        //        }
-        
-        //        if let filters = filters {
-        //            for (name, value) in filters {
-        //                queryItems.append(URLQueryItem(name: name, value: value))
-        //            }
-        //        }
-        
-        //        if var existingQueryItems = components.queryItems {
-        //            existingQueryItems.append(contentsOf: queryItems)
-        //            components.queryItems = existingQueryItems
-        //        } else {
-        //            components.queryItems = queryItems
-        //        }
-        
         components.queryItems = (components.queryItems ?? []) + queryItems
         
         guard let url = components.url else {
@@ -91,11 +73,4 @@ extension EndPoint {
         return EndPoint(path: "\(id ?? 0)")
     }
     
-//    static func details(withId: Int? = nil, additionalQueryItems: [URLQueryItem]? = nil) -> Self {
-//        return EndPoint(
-//            path: TypeEndPoint.random.rawValue,
-//            additionalQueryItems:
-//                [URLQueryItem(name: "id", value: "\(withId ?? 0)")]
-//        )
-//    }
 }

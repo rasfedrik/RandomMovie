@@ -55,6 +55,7 @@ final class RandomMovieViewController: BaseViewController {
         filtersButtonItem.tintColor = .turquoise
         navigationItem.rightBarButtonItem = filtersButtonItem
         
+//        loadRandomMovies()
         loadMovieFromUserDefaults()
         buttonHidden()
         setupCollectionView()
@@ -66,7 +67,9 @@ final class RandomMovieViewController: BaseViewController {
     @objc private func randomMoviesTapped() {
         isButtonHidden = true
         buttonHidden()
+        
         loadRandomMovies()
+        
         saveMovieToUserDefaults()
     }
     
@@ -79,6 +82,8 @@ final class RandomMovieViewController: BaseViewController {
         isButtonHidden = false
         buttonHidden()
         saveMovieToUserDefaults()
+        
+//        loadRandomMovies()
         
         moviesViewWithCollectionView.collectionView.reloadData()
     }
@@ -106,10 +111,12 @@ final class RandomMovieViewController: BaseViewController {
         if !isButtonHidden {
             randomButton.isHidden = false
             startOverButton.isHidden = true
+            moviesViewWithCollectionView.collectionView.isHidden = true
             navigationItem.rightBarButtonItem?.isHidden = false
         } else {
             randomButton.isHidden = true
             startOverButton.isHidden = false
+            moviesViewWithCollectionView.collectionView.isHidden = false
             navigationItem.rightBarButtonItem?.isHidden = true
         }
     }
@@ -179,8 +186,6 @@ extension RandomMovieViewController: RandomMovieViewProtocol {
     func success(moviePreview: PreviewForCollectionViewCellModel?) {
         DispatchQueue.main.async {
             guard let presenterData = moviePreview else { return }
-//            guard let posterData = moviePreview else { return }
-//            let posterImage = presenterData.getPosterImage()
             
             let previewMovie = PreviewForCollectionViewCellModel(
                 id: presenterData.id,
