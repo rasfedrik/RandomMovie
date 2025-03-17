@@ -1,5 +1,5 @@
 //
-//  RandomMovieViewController.swift
+//  RandomMoviesViewController.swift
 //  RandomMovie
 //
 //  Created by Семён Беляков on 09.01.2025.
@@ -7,23 +7,7 @@
 
 import UIKit
 
-final class RandomMovieViewController: BaseViewController {
-    
-    // Спросить у нейронок про AsyncAway
-    
-    //enum Filter {
-    //case year(Int)
-    //case onlyNew(Bool)
-    //case genre(String)
-    //}
-    //switch filtr {
-    //case .year(let int):
-    //
-    //case .onlyNew(let bool):
-    //
-    //case .genre(let string):
-    //
-    //}
+final class RandomMoviesViewController: BaseViewController {
     
     // MARK: - Properties
     var presenter: RandomMoviewPresenterProtocol!
@@ -32,6 +16,7 @@ final class RandomMovieViewController: BaseViewController {
     private var filtersButtonItem: UIBarButtonItem!
     private let moviesViewWithCollectionView = RandomMoviesViewWithCollectionView()
     private let queue = OperationQueue()
+    private var filters: PreviewForCollectionViewCellModel?
     
     private let numberOfCells = 2
     private var updateIndexCount = 0
@@ -42,12 +27,6 @@ final class RandomMovieViewController: BaseViewController {
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        randomButton.addTarget(self,
-                               action: #selector(randomMoviesTapped),
-                               for: .touchUpInside)
-        startOverButton.addTarget(self,
-                                  action: #selector(startOverTapped),
-                                  for: .touchUpInside)
         
         filtersButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "line.3.horizontal.decrease.circle"),
@@ -55,16 +34,32 @@ final class RandomMovieViewController: BaseViewController {
         filtersButtonItem.tintColor = .turquoise
         navigationItem.rightBarButtonItem = filtersButtonItem
         
-//        loadRandomMovies()
+        configurationButtons()
+        
         loadMovieFromUserDefaults()
         buttonHidden()
         setupCollectionView()
         setupButtons()
     }
     
-    
     // MARK: - Methods
-    @objc private func randomMoviesTapped() {
+    func updateFilters(_ filters: FiltersModel) {
+        presenter.updateFilters(filters)
+    }
+    
+    private func configurationButtons() {
+        randomButton.onTap = { [weak self] in
+            guard let self = self else { return }
+            self.randomMoviesTapped()
+        }
+        
+        startOverButton.onTap = { [weak self] in
+            guard let self = self else { return }
+            self.startOverTapped()
+        }
+    }
+    
+    private func randomMoviesTapped() {
         isButtonHidden = true
         buttonHidden()
         
@@ -73,7 +68,7 @@ final class RandomMovieViewController: BaseViewController {
         saveMovieToUserDefaults()
     }
     
-    @objc private func startOverTapped() {
+    private func startOverTapped() {
         queue.cancelAllOperations()
         presenter.cancelRequest()
         updateIndexCount = 0
@@ -160,7 +155,6 @@ final class RandomMovieViewController: BaseViewController {
         moviesViewWithCollectionView.collectionView.delegate = self
         moviesViewWithCollectionView.collectionView.dataSource = self
     }
-    
     private func setupButtons() {
         view.addSubview(randomButton)
         NSLayoutConstraint.activate([
@@ -181,7 +175,7 @@ final class RandomMovieViewController: BaseViewController {
 }
 
 // MARK: - Extensions
-extension RandomMovieViewController: RandomMovieViewProtocol {
+extension RandomMoviesViewController: RandomMovieViewProtocol {
     
     func success(moviePreview: PreviewForCollectionViewCellModel?) {
         DispatchQueue.main.async {
@@ -206,7 +200,7 @@ extension RandomMovieViewController: RandomMovieViewProtocol {
     
 }
 
-extension RandomMovieViewController: UICollectionViewDataSource {
+extension RandomMoviesViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return moviesAddedAfterPressingButton.count
@@ -229,7 +223,7 @@ extension RandomMovieViewController: UICollectionViewDataSource {
     
 }
 
-extension RandomMovieViewController: UICollectionViewDelegate {
+extension RandomMoviesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let posterData = moviesAddedAfterPressingButton[indexPath.row]

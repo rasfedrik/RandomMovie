@@ -24,3 +24,9 @@ extension UIColor {
     }
 }
 
+extension UIColor {
+    static var turquoiseAfterTapped: UIColor {
+        return UIColor(red: 48, green: 213, blue: 200, alpha: 0.3)
+    }
+}
+

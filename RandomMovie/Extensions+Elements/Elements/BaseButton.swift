@@ -9,33 +9,47 @@ import UIKit
 
 final class BaseButton: UIButton {
     
-    private var shadowLayer: CAShapeLayer!
-    
-    //MARK: - TypeButtons
-    enum TypeButtons {
-        case randomMovie
-        case startOver
-        case applyFilters
+    //MARK: - ButtonsType
+    enum ButtonsType: String {
+        case randomMovie = "Случайный фильм"
+        case startOver = "Начать сначала"
+        case applyFilters = "Применить"
     }
     
+    private var type: ButtonsType
+    var onTap: (() -> Void)?
+    
     //MARK: - init
-    init(type button: TypeButtons) {
+    init(type button: ButtonsType) {
+        self.type = button
         super.init(frame: .zero)
         self.translatesAutoresizingMaskIntoConstraints = false
         setupLayer()
         self.configuration = configuration(button: button)
+        addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        self.configuration = configuration(button: .randomMovie)
+        fatalError("init(coder:) has not been implemented")
     }
     
-    
-    
     // MARK: - Button Configuration
-    private func configuration(button type: TypeButtons) -> UIButton.Configuration {
+    
+    @objc private func buttonTapped() {
+        onTap?()
+    }
+    
+    private func setupLayer() {
+        layer.cornerRadius = 30
+        layer.cornerCurve = .continuous
+        layer.shadowOpacity = 0.2
+        layer.shadowOffset = .init(width: .zero, height: 8)
+        layer.shadowRadius = 10
+    }
+    
+    private func configuration(button type: ButtonsType) -> UIButton.Configuration {
         var configuration = UIButton.Configuration.filled()
+        configuration.title = type.rawValue
         configuration.baseBackgroundColor = .turquoise
         configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({ incoming in
             var outgoing = incoming
@@ -49,25 +63,6 @@ final class BaseButton: UIButton {
                 button.alpha = button.isHighlighted ? 0.8 : 1
             }
         }
-        
-        switch type {
-        case .randomMovie:
-            configuration.title = "Cлучайный фильм"
-            
-        case .startOver:
-            configuration.title = "Начать сначала"
-        
-        case .applyFilters:
-            configuration.title = "Применить"
-        }
         return configuration
-    }
-    
-    private func setupLayer() {
-        layer.cornerRadius = 30
-        layer.cornerCurve = .continuous
-        layer.shadowOpacity = 0.2
-        layer.shadowOffset = .init(width: .zero, height: 8)
-        layer.shadowRadius = 10
     }
 }
