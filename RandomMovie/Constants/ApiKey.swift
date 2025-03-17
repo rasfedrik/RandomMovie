@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct Constants {
+struct ApiConstants {
     static let apiKey = ["X-API-KEY" : "YHE67YR-2CEM9X3-JHKC6SR-9VWT8YB"]
 }

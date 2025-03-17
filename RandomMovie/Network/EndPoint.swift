@@ -13,68 +13,61 @@ struct EndPoint {
         case random = "random"
     }
     
-    enum ContemtType: String {
+    enum ContentType: String {
         case movie = "movie/"
     }
     
-    private var id = "0"
     private let apiVersion = "/v1.4/"
     private var path: String
     
-    public var filters: [String:String]?
     private var additionalQueryItems: [URLQueryItem]?
-    
     
     private var url: URL {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.kinopoisk.dev"
-        components.path = apiVersion + ContemtType.movie.rawValue + path
+        components.path = apiVersion + ContentType.movie.rawValue + path
+        
+//        let currentYear = Calendar.current.component(.year, from: Date())
         
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "notNullFields", value: "id"),
-            URLQueryItem(name: "notNullFields", value: "poster.url")
+            URLQueryItem(name: "notNullFields", value: "poster.url"),
+//            URLQueryItem(name: "rating.kp", value: "1.0-10.0"),
+//            URLQueryItem(name: "year", value: "1960-\(currentYear)")
         ]
         
         if let additionalQueryItems = additionalQueryItems {
-            queryItems.append(contentsOf: additionalQueryItems)
+            for item in additionalQueryItems {
+                queryItems.removeAll(where: {$0.name == item.name})
+                queryItems.append(item)
+            }
         }
         
-        //        if path.contains("movie/search") {
-        //            queryItems.append(URLQueryItem(name: "page", value: "1"))
-        //            queryItems.append(URLQueryItem(name: "limit", value: "3"))
-        //        }
-        
-        //        if let filters = filters {
-        //            for (name, value) in filters {
-        //                queryItems.append(URLQueryItem(name: name, value: value))
-        //            }
-        //        }
-        
-        //        if var existingQueryItems = components.queryItems {
-        //            existingQueryItems.append(contentsOf: queryItems)
-        //            components.queryItems = existingQueryItems
-        //        } else {
-        //            components.queryItems = queryItems
-        //        }
-        
-        components.queryItems = (components.queryItems ?? []) + queryItems
-        
-        guard let url = components.url else {
-            preconditionFailure("Invalid URL components: \(components)")
+        if components.queryItems == nil {
+            components.queryItems = queryItems
+        } else {
+            components.queryItems?.append(contentsOf: queryItems)
         }
         
-        print(url)
-        return url
+        if let urlString = components.url?.absoluteString {
+            let finalURLString = urlString.replacingOccurrences(of: "%25", with: "%")
+            if let finalURL = URL(string: finalURLString) {
+                print("Final URL: \(finalURL)")
+                return finalURL
+            }
+        }
+        
+        print(self.url)
+        return self.url
     }
-    
     
     var request: URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.timeoutInterval = 20
         
-        var headerFields = Constants.apiKey
+        var headerFields = ApiConstants.apiKey
         headerFields["accept"] = "application/json"
         request.allHTTPHeaderFields = headerFields
         return request
@@ -91,11 +84,49 @@ extension EndPoint {
         return EndPoint(path: "\(id ?? 0)")
     }
     
-//    static func details(withId: Int? = nil, additionalQueryItems: [URLQueryItem]? = nil) -> Self {
-//        return EndPoint(
-//            path: TypeEndPoint.random.rawValue,
-//            additionalQueryItems:
-//                [URLQueryItem(name: "id", value: "\(withId ?? 0)")]
-//        )
-//    }
+    static func random(with filters: FiltersModel? = nil, additionalQueryItems: [URLQueryItem]? = nil) -> Self {
+        
+        var queryItems = [URLQueryItem]()
+        
+        if let genres = filters?.genres?["genres.name"] {
+            for genre in genres where !genre.isEmpty {
+                let encodedValue = "%2B\(genre)"
+                queryItems.append(URLQueryItem(name: "genres.name", value: encodedValue))
+            }
+        }
+        
+        if let ratingKp = filters?.ratingKp, let nameCategory = ratingKp.nameCategory {
+            queryItems.removeAll(where: { $0.name == "rating.kp" })
+            let minValue = String(ratingKp.minValue ?? 1)
+            
+            if let maxValue = ratingKp.maxValue {
+                let encodedValue = "\(minValue)-\(maxValue)"
+                queryItems.append(URLQueryItem(name: nameCategory, value: encodedValue))
+            } else {
+                queryItems.append(URLQueryItem(name: nameCategory, value: minValue))
+            }
+        }
+        
+        if let years = filters?.years, let nameCategory = years.nameCategory {
+            let minValue = String(Int(years.minValue ?? 0))
+            
+            if let maxValue = years.maxValue, maxValue != 0 {
+                let encodedValue = "\(minValue)-\(Int(maxValue))"
+                queryItems.append(URLQueryItem(name: nameCategory, value: encodedValue))
+            } else {
+                queryItems.append(URLQueryItem(name: nameCategory, value: minValue))
+            }
+        }
+        
+        if let additionalQueryItems = additionalQueryItems {
+            queryItems.append(contentsOf: additionalQueryItems)
+            print(additionalQueryItems)
+        }
+        
+        return EndPoint(
+            path: TypeEndPoint.random.rawValue,
+            additionalQueryItems: queryItems
+        )
+    }
 }
+

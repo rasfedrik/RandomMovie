@@ -1,5 +1,5 @@
 //
-//  RandomMovieRouter.swift
+//  RandomMoviesRouter.swift
 //  RandomMovie
 //
 //  Created by Семён Беляков on 23.02.2025.
@@ -7,13 +7,14 @@
 
 import UIKit
 
-protocol RandomRouterProtocol {
-    func openRandomMovies()
+protocol RandomMoviesRouterProtocol {
+    func openRandomMovies(with filters: FiltersModel)
+    func popRandomMovies(with filters: FiltersModel)
     func openFilters()
     func openMovieDetails(movieId: Int?)
 }
 
-final class RandomMovieRouter: RandomRouterProtocol {
+final class RandomMoviesRouter: RandomMoviesRouterProtocol {
     
     weak var navigationController: UINavigationController?
     private let moduleBuilder: RandomModuleBuilderProtocol
@@ -23,15 +24,25 @@ final class RandomMovieRouter: RandomRouterProtocol {
         self.moduleBuilder = moduleBuilder
     }
     
-    func openRandomMovies() {
+    func openRandomMovies(with filters: FiltersModel) {
         guard let navController = navigationController else { return }
         let randomMoviesVC = moduleBuilder.createRandomMovieModule(navigationController: navController)
         navController.pushViewController(randomMoviesVC, animated: true)
     }
     
+    func popRandomMovies(with filters: FiltersModel) {
+        guard let navController = navigationController else { return }
+        if let randomMoviesVC = navController.viewControllers.first(where: { $0 is RandomMoviesViewController }) as? RandomMoviesViewController {
+            navController.popToViewController(randomMoviesVC, animated: true)
+            
+            let presenter = randomMoviesVC.presenter
+            presenter?.updateFilters(filters)
+        }
+    }
+    
     func openFilters() {
         guard let navController = navigationController else { return }
-        let filtersVC = moduleBuilder.createFiltersModule()
+        let filtersVC = moduleBuilder.createFiltersModule(navigationController: navController)
         navController.pushViewController(filtersVC, animated: true)
     }
     

@@ -12,7 +12,7 @@ final class RandomCollectionViewCell: UICollectionViewCell {
     // MARK: - Identifier
     static let id = "CollectionViewCell"
     
-    // MARK: - Elements
+    // MARK: - UI Elements
     private var movieNameLabel: BaseLabel = {
         let label = BaseLabel()
         label.textAlignment = .center
@@ -35,7 +35,7 @@ final class RandomCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
 
-    
+    // MARK: - Initializer
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupElements()

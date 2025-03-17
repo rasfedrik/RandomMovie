@@ -13,21 +13,22 @@ protocol RandomMovieViewProtocol: AnyObject {
 }
 
 protocol RandomMoviewPresenterProtocol: AnyObject {
-    init(view: RandomMovieViewProtocol, networkDataFetch: NetworkDataFetchProtocol, router: RandomRouterProtocol)
+    init(view: RandomMovieViewProtocol, networkDataFetch: NetworkDataFetchProtocol, router: RandomMoviesRouterProtocol)
     func fetchRandomMovie(completion: @escaping () -> Void)
     func cancelRequest()
     func openFilters()
     func openDetails(movieId: Int?)
-    var data: PreviewForCollectionViewCellModel? { get set }
+    func updateFilters(_ filters: FiltersModel)
 }
 
 final class RandomMoviewPresenter: RandomMoviewPresenterProtocol {
-    var data: PreviewForCollectionViewCellModel?
-    var router: RandomRouterProtocol
+    
+    var filters: FiltersModel?
+    var router: RandomMoviesRouterProtocol
     weak var view: RandomMovieViewProtocol?
     private let networkDataFetch: NetworkDataFetchProtocol!
     
-    init(view: RandomMovieViewProtocol, networkDataFetch: NetworkDataFetchProtocol, router: RandomRouterProtocol) {
+    init(view: RandomMovieViewProtocol, networkDataFetch: NetworkDataFetchProtocol, router: RandomMoviesRouterProtocol) {
         self.view = view
         self.networkDataFetch = networkDataFetch
         self.router = router
@@ -35,7 +36,7 @@ final class RandomMoviewPresenter: RandomMoviewPresenterProtocol {
     
     func cancelRequest() {
         networkDataFetch.cancelRequests()
-        data = nil
+        filters = nil
     }
     
     func openFilters() {
@@ -46,9 +47,13 @@ final class RandomMoviewPresenter: RandomMoviewPresenterProtocol {
         router.openMovieDetails(movieId: movieId)
     }
     
+    func updateFilters(_ filters: FiltersModel) {
+        self.filters = filters
+    }
+    
     func fetchRandomMovie(completion: @escaping () -> Void) {
         networkDataFetch.fetchData(
-            endPoint: .random(),
+            endPoint: .random(with: filters),
             expecting: PreviewForCollectionViewCellModel?.self) { [weak self] result in
                 guard let self = self else { return }
                 
@@ -69,9 +74,7 @@ final class RandomMoviewPresenter: RandomMoviewPresenterProtocol {
                                 print("Failed to load image:", error)
                                 completion()
                             }
-                            
                         }
-                        
                     case .failure(let error):
                         self.view?.failure(error: error)
                         completion()

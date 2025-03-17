@@ -10,16 +10,16 @@ import UIKit
 protocol RandomModuleBuilderProtocol {
     func createRandomMovieModule(navigationController: UINavigationController) -> UIViewController
     func createMovieDetailsModule(movieId: Int?) -> UIViewController
-    func createFiltersModule() -> UIViewController
+    func createFiltersModule(navigationController: UINavigationController) -> UIViewController
 }
 
 final class RandomMoviesModuleBuilder: RandomModuleBuilderProtocol {
     
     // MARK: - RandomMovieModule
     func createRandomMovieModule(navigationController: UINavigationController) -> UIViewController {
-        let view = RandomMovieViewController()
+        let view = RandomMoviesViewController()
         let networkService = NetworkDataFetch()
-        let router = RandomMovieRouter(navigationController: navigationController, moduleBuilder: self)
+        let router = RandomMoviesRouter(navigationController: navigationController, moduleBuilder: self)
         let presenter = RandomMoviewPresenter(view: view, networkDataFetch: networkService, router: router)
         view.presenter = presenter
         return view
@@ -34,10 +34,14 @@ final class RandomMoviesModuleBuilder: RandomModuleBuilderProtocol {
         return view
     }
     
-    func createFiltersModule() -> UIViewController {
+    func createFiltersModule(navigationController: UINavigationController) -> UIViewController {
         let view = FiltersViewController()
         let networkDataFetch = NetworkDataFetch()
-        let presenter = FiltersPresenter(view: view, networkService: networkDataFetch)
+        let randomRouter = RandomMoviesRouter(navigationController: navigationController, moduleBuilder: self)
+        
+        let router = FiltersRouter(view: view, randomMoviesRouter: randomRouter, navigationController: navigationController)
+        
+        let presenter = FiltersPresenter(view: view, networkDataFetch: networkDataFetch, router: router)
         view.presenter = presenter
         return view
     }

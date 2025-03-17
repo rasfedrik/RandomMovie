@@ -12,6 +12,7 @@ final class RandomMoviesViewWithCollectionView: UIView {
     // MARK: - Properties
     private(set) var collectionView: UICollectionView!
     
+    // MARK: - Constants
     private let lineSpacing: CGFloat = 5
     private let interItemSpacing: CGFloat = 5
     private let horizontalInsets: CGFloat = 5
