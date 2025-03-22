@@ -27,6 +27,7 @@ final class RandomMoviesViewWithCollectionView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Configuration Collection View
     private func configureCollectionView() {
         translatesAutoresizingMaskIntoConstraints = false
 

@@ -12,6 +12,15 @@ final class RandomCollectionViewCell: UICollectionViewCell {
     // MARK: - Identifier
     static let id = "CollectionViewCell"
     
+    // MARK: - Properties
+    private var movieID: Int?
+    private var isFavorite: Bool = false {
+        didSet {
+            let starImage = isFavorite ? UIImage(systemName: "star.fill") : UIImage(systemName: "star")
+            favoriteButton.setImage(starImage, for: .normal)
+        }
+    }
+    
     // MARK: - UI Elements
     private var movieNameLabel: BaseLabel = {
         let label = BaseLabel()
@@ -20,24 +29,26 @@ final class RandomCollectionViewCell: UICollectionViewCell {
     }()
     
     private var posterImageView: UIImageView = {
-        let imageView = UIImageView()
+        let imageView = UIImageView(image: UIImage(systemName: "questionmark"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
     
-    private var starImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "star.fill"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
-        return imageView
+    private var favoriteButton: UIButton = {
+        let favorite = UIButton(type: .roundedRect)
+        favorite.translatesAutoresizingMaskIntoConstraints = false
+        favorite.tintColor = UIColor.mainButtonsColor
+        return favorite
     }()
-
+    
+    var favoriteMovieTapped: ((Int, Bool) -> Void)?
+    
     // MARK: - Initializer
     override init(frame: CGRect) {
         super.init(frame: frame)
+        favoriteButton.addTarget(self, action: #selector(starTapped), for: .touchUpInside)
         setupElements()
     }
     
@@ -45,36 +56,43 @@ final class RandomCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     // MARK: - Constrains
     private func setupElements() {
         addSubview(posterImageView)
+        addSubview(movieNameLabel)
+        addSubview(favoriteButton)
         NSLayoutConstraint.activate([
             posterImageView.topAnchor.constraint(equalTo: topAnchor),
             posterImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.8),
-            posterImageView.widthAnchor.constraint(equalTo: widthAnchor)
-        ])
-        
-        addSubview(movieNameLabel)
-        NSLayoutConstraint.activate([
+            posterImageView.widthAnchor.constraint(equalTo: widthAnchor),
+            
             movieNameLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 2),
             movieNameLabel.widthAnchor.constraint(equalTo: widthAnchor),
-            movieNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
-        ])
-        
-        addSubview(starImageView)
-        NSLayoutConstraint.activate([
-            starImageView.topAnchor.constraint(equalTo: posterImageView.topAnchor, constant: 5),
-            starImageView.trailingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: -5),
-            starImageView.widthAnchor.constraint(equalToConstant: 30),
-            starImageView.heightAnchor.constraint(equalToConstant: 30)
+            movieNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            
+            favoriteButton.topAnchor.constraint(equalTo: posterImageView.topAnchor, constant: 5),
+            favoriteButton.trailingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: -5),
+            favoriteButton.widthAnchor.constraint(equalToConstant: 30),
+            favoriteButton.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
     
+    // MARK: - Methods
+    @objc private func starTapped() {
+        guard let movieID = movieID else { return }
+        isFavorite.toggle()
+        print(isFavorite)
+        UIView.animate(withDuration: 0.3) {
+            self.favoriteMovieTapped?(movieID, self.isFavorite)
+        }
+    }
     
-    func configure(with poster: UIImage?, text: String?) {
+    // MARK: - Configure
+    func configure(with poster: UIImage?, text: String?, movieID: Int, isFavorite: Bool) {
         self.posterImageView.image = poster
         self.movieNameLabel.text = text
+        self.movieID = movieID
+        self.isFavorite = isFavorite
     }
     
 }

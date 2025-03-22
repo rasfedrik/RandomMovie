@@ -28,13 +28,13 @@ struct EndPoint {
         components.host = "api.kinopoisk.dev"
         components.path = apiVersion + ContentType.movie.rawValue + path
         
-//        let currentYear = Calendar.current.component(.year, from: Date())
+        let currentYear = Calendar.current.component(.year, from: Date())
         
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "notNullFields", value: "id"),
             URLQueryItem(name: "notNullFields", value: "poster.url"),
-//            URLQueryItem(name: "rating.kp", value: "1.0-10.0"),
-//            URLQueryItem(name: "year", value: "1960-\(currentYear)")
+            URLQueryItem(name: "rating.kp", value: "1.0-10.0"),
+            URLQueryItem(name: "year", value: "1960-\(currentYear)")
         ]
         
         if let additionalQueryItems = additionalQueryItems {

@@ -50,7 +50,7 @@ final class BaseButton: UIButton {
     private func configuration(button type: ButtonsType) -> UIButton.Configuration {
         var configuration = UIButton.Configuration.filled()
         configuration.title = type.rawValue
-        configuration.baseBackgroundColor = .turquoise
+        configuration.baseBackgroundColor = .mainButtonsColor
         configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({ incoming in
             var outgoing = incoming
             outgoing.font = UIFont.preferredFont(forTextStyle: .callout)

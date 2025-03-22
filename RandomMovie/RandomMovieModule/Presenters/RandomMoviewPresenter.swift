@@ -8,7 +8,7 @@
 import Foundation
 
 protocol RandomMovieViewProtocol: AnyObject {
-    func success(moviePreview: PreviewForCollectionViewCellModel?)
+    func success(moviePreview: MoviePreviewModel?)
     func failure(error: Error)
 }
 
@@ -54,7 +54,7 @@ final class RandomMoviewPresenter: RandomMoviewPresenterProtocol {
     func fetchRandomMovie(completion: @escaping () -> Void) {
         networkDataFetch.fetchData(
             endPoint: .random(with: filters),
-            expecting: PreviewForCollectionViewCellModel?.self) { [weak self] result in
+            expecting: MoviePreviewModel?.self) { [weak self] result in
                 guard let self = self else { return }
                 
                 DispatchQueue.main.async {

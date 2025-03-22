@@ -66,12 +66,12 @@ final class FilterGenreButton: UIButton {
     }
     
     private func updateAppearance() {
-        configuration?.baseBackgroundColor = isFilterTapped ? .turquoiseAfterTapped : .turquoise
+        configuration?.baseBackgroundColor = isFilterTapped ? .mainButtonsColorAfterTapped : .mainButtonsColor
     }
     
     private func configuration(button type: ButtonsType) -> UIButton.Configuration {
         var configuration = UIButton.Configuration.filled()
-        configuration.baseBackgroundColor = .turquoise
+        configuration.baseBackgroundColor = .mainButtonsColor
         configuration.title = type.rawValue
         configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({ incoming in
             var outgoing = incoming

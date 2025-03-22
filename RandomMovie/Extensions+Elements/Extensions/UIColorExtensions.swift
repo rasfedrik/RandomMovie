@@ -19,13 +19,14 @@ extension UIColor {
 }
 
 extension UIColor {
-    static var turquoise: UIColor {
-        return UIColor(red: 48, green: 213, blue: 200) // Бирюзовый
+    /// Turquoise
+    static var mainButtonsColor: UIColor {
+        return UIColor(red: 48, green: 213, blue: 200)
     }
 }
 
 extension UIColor {
-    static var turquoiseAfterTapped: UIColor {
+    static var mainButtonsColorAfterTapped: UIColor {
         return UIColor(red: 48, green: 213, blue: 200, alpha: 0.3)
     }
 }

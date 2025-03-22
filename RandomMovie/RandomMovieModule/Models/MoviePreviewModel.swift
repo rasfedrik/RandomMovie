@@ -1,5 +1,5 @@
 //
-//  PreviewForCollectionViewCellModel.swift
+//  MoviePreviewModel.swift
 //  RandomMovie
 //
 //  Created by Семён Беляков on 26.01.2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct PreviewForCollectionViewCellModel: Codable, MoviewModelProtocol {
+struct MoviePreviewModel: Codable, MoviewModelProtocol {
     
     let id: Int?
     let name: String?

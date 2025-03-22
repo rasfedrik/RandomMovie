@@ -15,7 +15,8 @@ final class TapBarRouter: TapBarRouterProtocol {
     
     func createTapBarController() -> UITabBarController {
         let tapBarController = UITabBarController()
-        tapBarController.tabBar.tintColor = .turquoise
+        tapBarController.tabBar.tintColor = .mainButtonsColor
+        tapBarController.tabBar.barTintColor = .mainButtonsColorAfterTapped
         
         let randomMoviesNavController = UINavigationController()
         let favoritesMovieNavController = UINavigationController()
