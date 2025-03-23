@@ -1,5 +1,5 @@
 //
-//  RandomMoviesViewController.swift
+//  .swift
 //  RandomMovie
 //
 //  Created by Семён Беляков on 09.01.2025.
@@ -11,18 +11,21 @@ final class RandomMoviesViewController: BaseViewController {
     
     // MARK: - Properties
     var presenter: RandomMoviewPresenterProtocol!
-    private let randomButton = BaseButton(type: .randomMovie)
-    private let startOverButton = BaseButton(type: .startOver)
-    private var filtersButtonItem: UIBarButtonItem!
-    private let moviesViewWithCollectionView = RandomMoviesViewWithCollectionView()
     private let queue = OperationQueue()
-    private var filters: PreviewForCollectionViewCellModel?
+    private var favoriteMovieIDs: [FavoriteMovieModel] = []
+    private var moviesAddedAfterPressingButton: [MoviePreviewModel?] = []
     
+    // MARK: - Constants
     private let numberOfCells = 2
     private var updateIndexCount = 0
     private var isButtonHidden = false
+    private var isFavoriteMovie = false
     
-    private var moviesAddedAfterPressingButton: [PreviewForCollectionViewCellModel?] = []
+    // MARK: - UI Elements
+    private let moviesViewWithCollectionView = RandomMoviesViewWithCollectionView()
+    private let randomButton = BaseButton(type: .randomMovie)
+    private let startOverButton = BaseButton(type: .startOver)
+    private var filtersButtonItem: UIBarButtonItem!
     
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
@@ -31,7 +34,7 @@ final class RandomMoviesViewController: BaseViewController {
         filtersButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "line.3.horizontal.decrease.circle"),
             style: .plain, target: self, action: #selector(filtersButtonTapped))
-        filtersButtonItem.tintColor = .turquoise
+        filtersButtonItem.tintColor = .mainButtonsColor
         navigationItem.rightBarButtonItem = filtersButtonItem
         
         configurationButtons()
@@ -117,18 +120,27 @@ final class RandomMoviesViewController: BaseViewController {
     }
     
     private func saveMovieToUserDefaults() {
-        UserDefaults.standard.set(isButtonHidden,
-                                  forKey: "isButtonHidden")
         let encoder = JSONEncoder()
-        if let encodedPreviews = try? encoder.encode(moviesAddedAfterPressingButton) {
+        do {
+            let encodedPreviews = try encoder.encode(moviesAddedAfterPressingButton)
             UserDefaults.standard.set(encodedPreviews, forKey: "savedPreviews")
+            UserDefaults.standard.set(isButtonHidden, forKey: "isButtonHidden")
+        } catch {
+            print("Failed save to UserDefaults")
         }
+        
     }
     
     private func loadMovieFromUserDefaults() {
         let decoder = JSONDecoder()
+        
+        if let favoriteMoviesData = UserDefaults.standard.data(forKey: "favoriteMovieIDs"),
+           let favoriteMovies = try? decoder.decode([FavoriteMovieModel].self, from: favoriteMoviesData) {
+            self.favoriteMovieIDs = favoriteMovies
+        }
+        
         if let savedPreviewsData = UserDefaults.standard.data(forKey: "savedPreviews"),
-           let savedPreviews = try? decoder.decode([PreviewForCollectionViewCellModel].self, from: savedPreviewsData) {
+           let savedPreviews = try? decoder.decode([MoviePreviewModel].self, from: savedPreviewsData) {
             
             let savedIsButtonHidden = UserDefaults.standard.bool(
                 forKey: "isButtonHidden")
@@ -177,15 +189,16 @@ final class RandomMoviesViewController: BaseViewController {
 // MARK: - Extensions
 extension RandomMoviesViewController: RandomMovieViewProtocol {
     
-    func success(moviePreview: PreviewForCollectionViewCellModel?) {
+    func success(moviePreview: MoviePreviewModel?) {
         DispatchQueue.main.async {
             guard let presenterData = moviePreview else { return }
             
-            let previewMovie = PreviewForCollectionViewCellModel(
+            let previewMovie = MoviePreviewModel(
                 id: presenterData.id,
                 name: presenterData.name,
                 alternativeName: presenterData.alternativeName,
                 posterData: presenterData.getPosterImage(),
+                rating: presenterData.rating,
                 poster: presenterData.poster)
             
             self.moviesAddedAfterPressingButton.append(previewMovie)
@@ -214,11 +227,33 @@ extension RandomMoviesViewController: UICollectionViewDataSource {
         else { return UICollectionViewCell() }
         
         if let movie = moviesAddedAfterPressingButton[indexPath.item] {
+            let movieId = movie.id ?? 0
+            
             cell.configure(with: movie.getPosterImage() ?? UIImage(named: "placeholder"),
-                           text: movie.name ?? movie.alternativeName)
+                           text: movie.name ?? movie.alternativeName,
+                           movieID: movieId,
+                           isFavorite: favoriteMovieIDs.contains(where: { $0.id == movieId })
+            )
+            
+            cell.favoriteMovieTapped = { [weak self] id, favorite in
+                guard let self = self else { return }
+                self.handleFavoriteTapped(movieID: id, isFavorite: favorite)
+            }
+            
         }
-        
         return cell
+    }
+    
+    private func handleFavoriteTapped(movieID: Int, isFavorite: Bool) {
+        if isFavorite {
+            favoriteMovieIDs.append(FavoriteMovieModel(id: movieID, isFavorite: isFavorite))
+        } else {
+            favoriteMovieIDs.removeAll(where: { $0.id == movieID })
+        }
+        let encoder = JSONEncoder()
+        if let encodedFavoriteMovieId = try? encoder.encode(self.favoriteMovieIDs) {
+            UserDefaults.standard.setValue(encodedFavoriteMovieId, forKey: "favoriteMovieIDs")
+        }
     }
     
 }

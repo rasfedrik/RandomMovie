@@ -15,14 +15,15 @@ final class TapBarRouter: TapBarRouterProtocol {
     
     func createTapBarController() -> UITabBarController {
         let tapBarController = UITabBarController()
-        tapBarController.tabBar.tintColor = .turquoise
+        tapBarController.tabBar.tintColor = .mainButtonsColor
+        tapBarController.tabBar.barTintColor = .mainButtonsColorAfterTapped
         
         let randomMoviesNavController = UINavigationController()
         let favoritesMovieNavController = UINavigationController()
         
         let randomMoviesVC = RandomMoviesModuleBuilder().createRandomMovieModule(navigationController: randomMoviesNavController)
         
-        let favoritesMovieVC = FavoritesMovieModuleBuilder().createFavoriteMovie(navigationController: favoritesMovieNavController)
+        let favoritesMovieVC = FavoritesMovieModuleBuilder().createFavoriteMovieModule(navigationController: favoritesMovieNavController)
         
         randomMoviesNavController.viewControllers = [randomMoviesVC]
         favoritesMovieNavController.viewControllers = [favoritesMovieVC]

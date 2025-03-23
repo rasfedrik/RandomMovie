@@ -1,5 +1,5 @@
 //
-//  RandomMoviewPresenter.swift
+//  RandomMoviePresenter.swift
 //  RandomMovie
 //
 //  Created by Семён Беляков on 20.01.2025.
@@ -8,7 +8,7 @@
 import Foundation
 
 protocol RandomMovieViewProtocol: AnyObject {
-    func success(moviePreview: PreviewForCollectionViewCellModel?)
+    func success(moviePreview: MoviePreviewModel?)
     func failure(error: Error)
 }
 
@@ -21,7 +21,7 @@ protocol RandomMoviewPresenterProtocol: AnyObject {
     func updateFilters(_ filters: FiltersModel)
 }
 
-final class RandomMoviewPresenter: RandomMoviewPresenterProtocol {
+final class RandomMoviePresenter: RandomMoviewPresenterProtocol {
     
     var filters: FiltersModel?
     var router: RandomMoviesRouterProtocol
@@ -54,7 +54,7 @@ final class RandomMoviewPresenter: RandomMoviewPresenterProtocol {
     func fetchRandomMovie(completion: @escaping () -> Void) {
         networkDataFetch.fetchData(
             endPoint: .random(with: filters),
-            expecting: PreviewForCollectionViewCellModel?.self) { [weak self] result in
+            expecting: MoviePreviewModel?.self) { [weak self] result in
                 guard let self = self else { return }
                 
                 DispatchQueue.main.async {
@@ -63,7 +63,7 @@ final class RandomMoviewPresenter: RandomMoviewPresenterProtocol {
                     case .success(let movie):
                         guard var movie = movie else { return }
                         
-                        self.fetchPosterImage(url: movie.poster?.url) { result in
+                        self.fetchPosterImage(movie.poster?.url) { result in
                             switch result {
                                 
                             case .success(let poster):
@@ -83,8 +83,8 @@ final class RandomMoviewPresenter: RandomMoviewPresenterProtocol {
             }
     }
     
-    private func fetchPosterImage(url: String?, completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        let urlString = url ?? "https://image.openmoviedb.com/kinopoisk-st-images//actor_iphone/iphone360_6580433.jpg"
+    private func fetchPosterImage(_ url: String?, completion: @escaping (Result<Data, NetworkError>) -> Void) {
+        let urlString = url ?? DefaultImageUrl.url
         
         guard let url = URL(string: urlString) else {
             let error = NetworkError.invalidResponse(urlString)
