@@ -82,7 +82,7 @@ final class FavoriteMoviesTableViewCell: UITableViewCell {
     }
     
     // MARK: - Configure
-    func configure(poster: UIImage, name: String, alternativeName: String, rating: String) {
+    func configure(poster: UIImage?, name: String?, alternativeName: String?, rating: String?) {
         self.posterImageView.image = poster
         self.movieNameLabel.text = name
         self.movieAlternativeNameLabel.text = alternativeName

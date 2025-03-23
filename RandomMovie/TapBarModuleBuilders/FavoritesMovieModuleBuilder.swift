@@ -8,15 +8,16 @@
 import UIKit
 
 protocol FavoritesMovieModuleBuilderProtocol {
-    func createFavoriteMovie(navigationController: UINavigationController) -> UIViewController
+    func createFavoriteMovieModule(navigationController: UINavigationController) -> UIViewController
 }
 
 final class FavoritesMovieModuleBuilder: FavoritesMovieModuleBuilderProtocol {
     
     // MARK: - FavoriteMovieModule
-    func createFavoriteMovie(navigationController: UINavigationController) -> UIViewController {
+    func createFavoriteMovieModule(navigationController: UINavigationController) -> UIViewController {
         let view = FavoriteMovieViewController()
-        let presenter = FavoriteMoviePresenter(view: view)
+        let networkDataFetch = NetworkDataFetch()
+        let presenter = FavoriteMoviePresenter(view: view, networkDataFetch: networkDataFetch)
         view.presenter = presenter
         return view
     }

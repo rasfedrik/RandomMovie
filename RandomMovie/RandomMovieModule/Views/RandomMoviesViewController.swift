@@ -191,6 +191,7 @@ extension RandomMoviesViewController: RandomMovieViewProtocol {
                 name: presenterData.name,
                 alternativeName: presenterData.alternativeName,
                 posterData: presenterData.getPosterImage(),
+                rating: presenterData.rating,
                 poster: presenterData.poster)
             
             self.moviesAddedAfterPressingButton.append(previewMovie)

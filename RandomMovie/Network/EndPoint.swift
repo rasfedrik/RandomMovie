@@ -80,7 +80,8 @@ extension EndPoint {
         return EndPoint(path: TypeEndPoint.random.rawValue)
     }
     
-    static func details(with id: Int?) -> Self {
+    static func movieByID(_ id: Int?) -> Self {
+        
         return EndPoint(path: "\(id ?? 0)")
     }
     

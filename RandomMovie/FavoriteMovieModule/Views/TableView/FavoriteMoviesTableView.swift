@@ -10,7 +10,7 @@ import UIKit
 final class FavoriteMoviesTableView: UITableView {
     
     // MARK: - Properties
-    private var previewsData: [MoviePreviewModel] = []
+    var favoriteMoviesPreviewsData: [MoviePreviewModel] = []
     
     // MARK: - Initializer
     override init(frame: CGRect, style: UITableView.Style) {
@@ -44,20 +44,37 @@ final class FavoriteMoviesTableView: UITableView {
 extension FavoriteMoviesTableView: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return favoriteMoviesPreviewsData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = dequeueReusableCell(withIdentifier: FavoriteMoviesTableViewCell.id, for: indexPath) as? FavoriteMoviesTableViewCell else { return UITableViewCell() }
         
-        let tempPoster = UIImage(systemName: "photo.artframe")!
+        guard indexPath.row < favoriteMoviesPreviewsData.count else {
+            return UITableViewCell()
+        }
         
-        cell.configure(poster: tempPoster, name: "name", alternativeName: "alternativeName", rating: "rating")
+        guard let cell = dequeueReusableCell(
+            withIdentifier: FavoriteMoviesTableViewCell.id,
+            for: indexPath) as? FavoriteMoviesTableViewCell
+        else { return UITableViewCell() }
+        
+        let movie = favoriteMoviesPreviewsData[indexPath.row]
+        
+        let poster = movie.getPosterImage() ?? UIImage(named: "placeholder")
+        let name = movie.name ?? "-"
+        let alternativeName = movie.alternativeName ?? "-"
+        let rating = movie.rating?.kp ?? 0.0
+        
+        cell.configure(poster: poster, name: name, alternativeName: alternativeName, rating: "\(rating)")
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

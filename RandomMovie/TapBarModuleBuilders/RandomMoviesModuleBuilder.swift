@@ -20,7 +20,7 @@ final class RandomMoviesModuleBuilder: RandomModuleBuilderProtocol {
         let view = RandomMoviesViewController()
         let networkService = NetworkDataFetch()
         let router = RandomMoviesRouter(navigationController: navigationController, moduleBuilder: self)
-        let presenter = RandomMoviewPresenter(view: view, networkDataFetch: networkService, router: router)
+        let presenter = RandomMoviePresenter(view: view, networkDataFetch: networkService, router: router)
         view.presenter = presenter
         return view
     }

@@ -23,7 +23,7 @@ final class TapBarRouter: TapBarRouterProtocol {
         
         let randomMoviesVC = RandomMoviesModuleBuilder().createRandomMovieModule(navigationController: randomMoviesNavController)
         
-        let favoritesMovieVC = FavoritesMovieModuleBuilder().createFavoriteMovie(navigationController: favoritesMovieNavController)
+        let favoritesMovieVC = FavoritesMovieModuleBuilder().createFavoriteMovieModule(navigationController: favoritesMovieNavController)
         
         randomMoviesNavController.viewControllers = [randomMoviesVC]
         favoritesMovieNavController.viewControllers = [favoritesMovieVC]

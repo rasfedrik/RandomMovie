@@ -33,7 +33,7 @@ final class MovieDetailsPresenter: MovieDetailsViewPresenterProtocol {
     
     func fetchMovieDetails() {
         networkDataFetch.fetchData(
-            endPoint: .details(with: movieId),
+            endPoint: .movieByID(movieId),
             expecting: RandomMovieModel?.self) { [weak self] result in
                 guard let self = self else { return }
                 

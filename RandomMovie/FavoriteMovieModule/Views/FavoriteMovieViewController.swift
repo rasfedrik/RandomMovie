@@ -17,23 +17,13 @@ final class FavoriteMovieViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        presenter.fetchFavoriteMovies()
+        setupUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadFavoriteMoviesIDFromUserDefaults()
-        setupUI()
-    }
-    
-    
-    // MARK: - Methods
-    private func loadFavoriteMoviesIDFromUserDefaults() {
-        let decoder = JSONDecoder()
-        if let savedMovieIdData = UserDefaults.standard.data(forKey: "favoriteMovieIDs"),
-            let savedMovieId = try? decoder.decode([FavoriteMovieModel].self, from: savedMovieIdData) {
-            print(savedMovieId)
-            
-        }
+//        loadFavoriteMoviesIDFromUserDefaults()
     }
     
     // MARK: - Setup UI
@@ -45,5 +35,17 @@ final class FavoriteMovieViewController: BaseViewController {
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+    }
+}
+
+extension FavoriteMovieViewController: FavoriteMovieViewProtocol {
+    func success(moviePreview: MoviePreviewModel?) {
+        
+        if let moviePreview = moviePreview {
+            tableView.favoriteMoviesPreviewsData.append(moviePreview)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
 }
