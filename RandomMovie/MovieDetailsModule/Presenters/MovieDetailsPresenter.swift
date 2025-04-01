@@ -8,14 +8,15 @@
 import Foundation
 
 protocol MovieDetailsViewProtocol: AnyObject {
-    func success(movieDetails: RandomMovieModel?, posterData: Data?)
+    func details(movieDetails: RandomMovieModel?, posterData: Data?)
     func failure(error: Error)
 }
 
 protocol MovieDetailsViewPresenterProtocol: AnyObject {
     init(view: MovieDetailsViewProtocol, movieId: Int?, networkDataFetch: NetworkDataFetch!)
     func fetchMovieDetails()
-    
+    func toggleFavorite(id: Int?)
+    func isFavoriteMovie() -> Bool
 }
 
 final class MovieDetailsPresenter: MovieDetailsViewPresenterProtocol {
@@ -23,12 +24,24 @@ final class MovieDetailsPresenter: MovieDetailsViewPresenterProtocol {
     weak var view: MovieDetailsViewProtocol?
     var movieId: Int?
     let networkDataFetch: NetworkDataFetch!
+    private let favoriteService = FavoriteService()
     
     init(view: MovieDetailsViewProtocol,
          movieId: Int?, networkDataFetch: NetworkDataFetch!) {
         self.view = view
         self.movieId = movieId
         self.networkDataFetch = networkDataFetch
+    }
+    
+    // MARK: - Methods
+    func toggleFavorite(id: Int?) {
+        guard movieId == id, let id = id else { return }
+        favoriteService.toggleFavorite(movieId: id)
+    }
+    
+    func isFavoriteMovie() -> Bool {
+        guard let movieId = movieId else { return false }
+        return favoriteService.isFavorite(movieId: movieId)
     }
     
     func fetchMovieDetails() {
@@ -45,7 +58,7 @@ final class MovieDetailsPresenter: MovieDetailsViewPresenterProtocol {
                         self.fetchPosterImage(url: movie.poster?.url) { result in
                             switch result {
                             case .success(let poster):
-                                self.view?.success(
+                                self.view?.details(
                                     movieDetails: movie,
                                     posterData: poster
                                 )

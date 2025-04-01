@@ -9,6 +9,7 @@ import UIKit
 
 final class MovieDetailsViewController: BaseViewController {
     
+    // MARK: - Properties
     var presenter: MovieDetailsPresenter!
     private let scrollView = MovieDetailsScrollView()
     
@@ -17,6 +18,11 @@ final class MovieDetailsViewController: BaseViewController {
         super.viewDidLoad()
         presenter.fetchMovieDetails()
         setupScrollView()
+        scrollView.onTap = { [weak self] id in
+            guard let self = self else { return }
+            self.presenter.toggleFavorite(id: id)
+            print(id)
+        }
     }
     
     // MARK: - Methods
@@ -34,21 +40,19 @@ final class MovieDetailsViewController: BaseViewController {
 
 // MARK: - Extensions
 extension MovieDetailsViewController: MovieDetailsViewProtocol {
-    func success(movieDetails: RandomMovieModel?, posterData: Data?) {
-        
+    
+    func details(movieDetails: RandomMovieModel?, posterData: Data?) {
+        let movieID = movieDetails?.id ?? 0
         var name = movieDetails?.name ?? movieDetails?.alternativeName ?? "Название отсутствует"
-        
         let year = movieDetails?.year ?? 0
         name += " (\(year))"
-        
         let description = movieDetails?.description ?? "Нет описания"
-        
         var posterImage: UIImage?
         if let data = posterData {
             posterImage = UIImage(data: data)
         }
         
-        scrollView.configure(posterImage: posterImage, movieName: name, description: description)
+        scrollView.configure(id: movieID, posterImage: posterImage, movieName: name, description: description, isFavorite: FavoriteService().isFavorite(movieId: movieID))
     }
     
     func failure(error: Error) {

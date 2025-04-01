@@ -19,6 +19,7 @@ protocol RandomMoviewPresenterProtocol: AnyObject {
     func openFilters()
     func openDetails(movieId: Int?)
     func updateFilters(_ filters: FiltersModel)
+    func toggleFavorite(movieId: Int)
 }
 
 final class RandomMoviePresenter: RandomMoviewPresenterProtocol {
@@ -27,6 +28,7 @@ final class RandomMoviePresenter: RandomMoviewPresenterProtocol {
     var router: RandomMoviesRouterProtocol
     weak var view: RandomMovieViewProtocol?
     private let networkDataFetch: NetworkDataFetchProtocol!
+    private let favoriteService = FavoriteService()
     
     init(view: RandomMovieViewProtocol, networkDataFetch: NetworkDataFetchProtocol, router: RandomMoviesRouterProtocol) {
         self.view = view
@@ -49,6 +51,10 @@ final class RandomMoviePresenter: RandomMoviewPresenterProtocol {
     
     func updateFilters(_ filters: FiltersModel) {
         self.filters = filters
+    }
+    
+    func toggleFavorite(movieId: Int) {
+        favoriteService.toggleFavorite(movieId: movieId)
     }
     
     func fetchRandomMovie(completion: @escaping () -> Void) {

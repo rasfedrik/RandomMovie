@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FavoriteMovieModel: Codable {
-    var id: Int
-    var isFavorite: Bool
-}
+//struct FavoriteMovieModel: Codable {
+//    var id: Int
+//    var isFavorite: Bool
+//}

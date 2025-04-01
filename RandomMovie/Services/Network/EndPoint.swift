@@ -53,12 +53,11 @@ struct EndPoint {
         if let urlString = components.url?.absoluteString {
             let finalURLString = urlString.replacingOccurrences(of: "%25", with: "%")
             if let finalURL = URL(string: finalURLString) {
-                print("Final URL: \(finalURL)")
+//                print("Final URL: \(finalURL)")
                 return finalURL
             }
         }
         
-        print(self.url)
         return self.url
     }
     
