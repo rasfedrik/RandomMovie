@@ -12,18 +12,18 @@ final class FavoriteMovieViewController: BaseViewController {
     // MARK: - Properties
     var presenter: FavoriteMoviePresenterProtocol!
     private let tableView = FavoriteMoviesTableView()
+    private let favoriteService = FavoriteService()
     
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        presenter.fetchFavoriteMovies()
-        setupUI()
+        view.backgroundColor = .mainButtonsColorAfterTapped
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-//        loadFavoriteMoviesIDFromUserDefaults()
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        presenter.fetchFavoriteMovies()
+        setupUI()
     }
     
     // MARK: - Setup UI
@@ -39,11 +39,11 @@ final class FavoriteMovieViewController: BaseViewController {
 }
 
 extension FavoriteMovieViewController: FavoriteMovieViewProtocol {
-    func success(moviePreview: MoviePreviewModel?) {
-        
+    
+    func showAllFavoriteMovies(moviePreview: [MoviePreviewModel]?) {
         if let moviePreview = moviePreview {
-            tableView.favoriteMoviesPreviewsData.append(moviePreview)
             DispatchQueue.main.async {
+                self.tableView.favoriteMoviesPreviewsData = moviePreview
                 self.tableView.reloadData()
             }
         }

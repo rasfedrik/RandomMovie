@@ -9,9 +9,18 @@ import UIKit
 
 final class MovieDetailsScrollView: UIScrollView {
     
+    // MARK: - Properties
     private let imageLoader = ImageLoader.share
+    private var movieID: Int?
+    private var isFavorite: Bool = false {
+        didSet {
+            let starImage = isFavorite ? UIImage(systemName: "star.fill") : UIImage(systemName: "star")
+            favoriteButton.setImage(starImage, for: .normal)
+        }
+    }
+    var onTap: ((Int) -> Void)?
     
-    // MARK: - Elements
+    // MARK: - UI Elements
     private let contentView: UIView = {
         let content = UIView()
         content.translatesAutoresizingMaskIntoConstraints = false
@@ -24,6 +33,13 @@ final class MovieDetailsScrollView: UIScrollView {
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         return imageView
+    }()
+    
+    private var favoriteButton: UIButton = {
+        let favorite = UIButton(type: .roundedRect)
+        favorite.translatesAutoresizingMaskIntoConstraints = false
+        favorite.tintColor = UIColor.mainButtonsColor
+        return favorite
     }()
     
     private let movieNameLabel: BaseLabel = {
@@ -39,10 +55,20 @@ final class MovieDetailsScrollView: UIScrollView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        favoriteButton.addTarget(self, action: #selector(starTapped), for: .touchUpInside)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Methods
+    @objc private func starTapped() {
+        guard let movieID = movieID else { return }
+        isFavorite.toggle()
+        UIView.animate(withDuration: 0.3) {
+            self.onTap?(self.movieID ?? 0)
+        }
     }
     
     // MARK: - Constraints
@@ -50,6 +76,7 @@ final class MovieDetailsScrollView: UIScrollView {
         translatesAutoresizingMaskIntoConstraints = false
         addSubview(contentView)
         contentView.addSubview(posterImageView)
+        contentView.addSubview(favoriteButton)
         contentView.addSubview(movieNameLabel)
         contentView.addSubview(descriptionLabel)
         
@@ -65,22 +92,29 @@ final class MovieDetailsScrollView: UIScrollView {
             posterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             posterImageView.heightAnchor.constraint(equalToConstant: 450),
             
-            movieNameLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor),
-            movieNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
-            movieNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
+            favoriteButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
+            favoriteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            favoriteButton.widthAnchor.constraint(equalToConstant: 44),
+            favoriteButton.heightAnchor.constraint(equalToConstant: 44),
             
-            descriptionLabel.topAnchor.constraint(equalTo: movieNameLabel.bottomAnchor, constant: 5),
-            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
-            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
+            movieNameLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 16),
+            movieNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            movieNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            
+            descriptionLabel.topAnchor.constraint(equalTo: movieNameLabel.bottomAnchor, constant: 7),
+            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 7),
+            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -7),
             descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     
-    func configure(posterImage: UIImage?, movieName: String?, description: String?) {
-        
+    // MARK: - Configure
+    func configure(id: Int, posterImage: UIImage?, movieName: String?, description: String?, isFavorite: Bool) {
+        self.movieID = id
         self.posterImageView.image = posterImage ?? UIImage(named: "placeholder")
         self.movieNameLabel.text = movieName
         self.descriptionLabel.text = description
+        self.isFavorite = isFavorite
     }
     
 }

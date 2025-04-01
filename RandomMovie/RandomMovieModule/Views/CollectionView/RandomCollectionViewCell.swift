@@ -43,7 +43,7 @@ final class RandomCollectionViewCell: UICollectionViewCell {
         return favorite
     }()
     
-    var favoriteMovieTapped: ((Int, Bool) -> Void)?
+    var favoriteMovieTapped: ((Int) -> Void)?
     
     // MARK: - Initializer
     override init(frame: CGRect) {
@@ -81,9 +81,8 @@ final class RandomCollectionViewCell: UICollectionViewCell {
     @objc private func starTapped() {
         guard let movieID = movieID else { return }
         isFavorite.toggle()
-        print(isFavorite)
         UIView.animate(withDuration: 0.3) {
-            self.favoriteMovieTapped?(movieID, self.isFavorite)
+            self.favoriteMovieTapped?(movieID)
         }
     }
     
