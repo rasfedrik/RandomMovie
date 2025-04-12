@@ -24,7 +24,7 @@ final class FiltersViewController: BaseViewController {
     // MARK: - ViewDidLoad and deinit
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationItem.title = "Фильтры"
         applyFiltersButton.addTarget(self, action: #selector(applyFiltersTapped), for: .touchUpInside)
         createRatingKpCategory()
         createYearsCategory()
