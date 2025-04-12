@@ -18,6 +18,10 @@ final class TapBarRouter: TapBarRouterProtocol {
         tapBarController.tabBar.tintColor = .mainButtonsColor
         tapBarController.tabBar.barTintColor = .mainButtonsColorAfterTapped
         
+        if #available(iOS 13.0, *) {
+            tapBarController.tabBar.scrollEdgeAppearance = tapBarController.tabBar.standardAppearance
+        }
+        
         let randomMoviesNavController = UINavigationController()
         let favoritesMovieNavController = UINavigationController()
         

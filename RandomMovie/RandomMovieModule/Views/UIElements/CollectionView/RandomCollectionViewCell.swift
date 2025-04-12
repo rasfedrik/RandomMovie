@@ -43,6 +43,16 @@ final class RandomCollectionViewCell: UICollectionViewCell {
         return favorite
     }()
     
+    private var highLightedBorderView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.red.cgColor
+        view.isHidden = true
+        return view
+    }()
+        
     var favoriteMovieTapped: ((Int) -> Void)?
     
     // MARK: - Initializer
@@ -75,6 +85,14 @@ final class RandomCollectionViewCell: UICollectionViewCell {
             favoriteButton.widthAnchor.constraint(equalToConstant: 30),
             favoriteButton.heightAnchor.constraint(equalToConstant: 30)
         ])
+        
+        addSubview(highLightedBorderView)
+        NSLayoutConstraint.activate([
+            highLightedBorderView.topAnchor.constraint(equalTo: topAnchor),
+            highLightedBorderView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            highLightedBorderView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            highLightedBorderView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
     }
     
     // MARK: - Methods
@@ -83,6 +101,13 @@ final class RandomCollectionViewCell: UICollectionViewCell {
         isFavorite.toggle()
         UIView.animate(withDuration: 0.3) {
             self.favoriteMovieTapped?(movieID)
+        }
+    }
+    
+    func setHighlight(_ highlight: Bool) {
+        UIView.animate(withDuration: 0.3) {
+            self.highLightedBorderView.isHidden = !highlight
+            self.transform = highlight ? CGAffineTransform(scaleX: 1.05, y: 1.05) : .identity
         }
     }
     

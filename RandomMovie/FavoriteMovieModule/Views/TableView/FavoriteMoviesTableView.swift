@@ -23,6 +23,8 @@ final class FavoriteMoviesTableView: UITableView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    var onTap: ((Int) -> Void)?
+    
     // MARK: - Methods
     private func setupTableView() {
         translatesAutoresizingMaskIntoConstraints = false
@@ -76,5 +78,7 @@ extension FavoriteMoviesTableView: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        guard let id = favoriteMoviesPreviewsData[indexPath.row].id else { return }
+        onTap?(id)
     }
 }

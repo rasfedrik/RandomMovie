@@ -11,7 +11,7 @@ class BaseLabel: UILabel {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        font = UIFont.systemFont(ofSize: 18)
+        font = UIFont.systemFont(ofSize: 12)
         translatesAutoresizingMaskIntoConstraints = false
         numberOfLines = 0
     }

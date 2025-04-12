@@ -6,20 +6,29 @@
 //
 
 import UIKit
+import AudioToolbox
+
+protocol RandomMoviesViewWithCollectionViewDelegate: AnyObject {
+    func openDetailsDidTap(movie id: Int?) -> Void
+    func isFavoriteMovieDidTap(movie id: Int) -> Void
+    func startRandomHighlighting()
+    func lastMovie(id: Int?)
+}
 
 final class RandomMoviesViewWithCollectionView: UIView {
     
     // MARK: - Properties
     private(set) var collectionView: UICollectionView!
     var randomMovies: [MoviePreviewModel?] = []
+    weak var delegate: RandomMoviesViewWithCollectionViewDelegate?
+    private var highlightTimer: Timer?
     
     // MARK: - Constants
     private let lineSpacing: CGFloat = 5
     private let interItemSpacing: CGFloat = 5
     private let horizontalInsets: CGFloat = 5
-    
-    var onTap: ((Int?) -> Void)?
-    var isFavorite: ((Int) -> Void)?
+    private let numberOfPassesForAllCells = 3
+    private var remainingIterations = 0
     
     // MARK: - Initializer
     override init(frame: CGRect) {
@@ -29,6 +38,15 @@ final class RandomMoviesViewWithCollectionView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
+        let widthCell = (frame.size.width - interItemSpacing * 2 - horizontalInsets * 2) / 3
+        let heightCell = widthCell * 1.5
+        layout.itemSize = CGSize(width: widthCell, height: heightCell)
     }
     
     // MARK: - Configuration Collection View
@@ -60,13 +78,46 @@ final class RandomMoviesViewWithCollectionView: UIView {
         collectionView.dataSource = self
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    func startRandomHighlighting() {
+        highlightTimer?.invalidate()
+        remainingIterations = randomMovies.count * numberOfPassesForAllCells
         
-        guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
-        let widthCell = (frame.size.width - interItemSpacing * 2 - horizontalInsets * 2) / 3
-        let heightCell = widthCell * 1.5
-        layout.itemSize = CGSize(width: widthCell, height: heightCell)
+        highlightTimer = Timer.scheduledTimer(
+            timeInterval: 0.15,
+            target: self,
+            selector: #selector(highlightRandomCell),
+            userInfo: nil,
+            repeats: true
+        )
+    }
+    
+    private func playHighlightSound() {
+        AudioServicesPlaySystemSound(1104)
+    }
+    
+    @objc private func highlightRandomCell() {
+        guard remainingIterations > 0 else {
+            highlightTimer?.invalidate()
+            return
+        }
+        
+        remainingIterations -= 1
+        
+        let randomIndex = Int.random(in: 0..<randomMovies.count)
+        guard let cell = collectionView.cellForItem(at: IndexPath(item: randomIndex, section: 0)) as? RandomCollectionViewCell else {
+            return
+        }
+
+        cell.setHighlight(true)
+        playHighlightSound()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            cell.setHighlight(false)
+        }
+        
+        if remainingIterations == 0 {
+            let id = randomMovies[randomIndex]?.id ?? 0
+            delegate?.lastMovie(id: id)
+        }
     }
     
 }
@@ -95,7 +146,8 @@ extension RandomMoviesViewWithCollectionView: UICollectionViewDataSource {
             )
             
             cell.favoriteMovieTapped = { [weak self] id in
-                self?.isFavorite?(id)
+                guard let strongSelf = self else { return }
+                strongSelf.delegate?.isFavoriteMovieDidTap(movie: id)
             }
             
         }
@@ -109,7 +161,7 @@ extension RandomMoviesViewWithCollectionView: UICollectionViewDelegate {
         
         let posterData = randomMovies[indexPath.row]
         guard let movieId = posterData?.id else { return }
-        self.onTap?(movieId)
+        self.delegate?.openDetailsDidTap(movie: movieId)
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  .swift
+//  RandomMoviesViewController.swift
 //  RandomMovie
 //
 //  Created by Семён Беляков on 09.01.2025.
@@ -11,11 +11,9 @@ final class RandomMoviesViewController: BaseViewController {
     
     // MARK: - Properties
     var presenter: RandomMoviewPresenterProtocol!
-    private let queue = OperationQueue()
     private let favoriteService = FavoriteService()
     
     // MARK: - Constants
-    private let numberOfCells = 2
     private var updateIndexCount = 0
     private var isButtonHidden = false
     private var isFavoriteMovie = false
@@ -24,7 +22,11 @@ final class RandomMoviesViewController: BaseViewController {
     private let moviesViewWithCollectionView = RandomMoviesViewWithCollectionView()
     private let randomButton = BaseButton(type: .randomMovie)
     private let startOverButton = BaseButton(type: .startOver)
+    private let chooseRandomMovie = BaseButton(type: .chooseRandomMovie)
     private var filtersButtonItem: UIBarButtonItem!
+    private let movieIsWinnerView = MovieWinnerView()
+    private let overlayView = UIView()
+    private let activityIndicator = UIActivityIndicatorView()
     
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
@@ -41,15 +43,8 @@ final class RandomMoviesViewController: BaseViewController {
         buttonHidden()
         setupCollectionView()
         setupButtons()
-        
-        moviesViewWithCollectionView.onTap = { movieId in
-            self.presenter.openDetails(movieId: movieId)
-        }
-        
-        moviesViewWithCollectionView.isFavorite = { movieId in
-            self.presenter.toggleFavorite(movieId: movieId)
-        }
-
+        setupMovieIsWinerView()
+        moviesViewWithCollectionView.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,63 +59,84 @@ final class RandomMoviesViewController: BaseViewController {
     
     private func configurationButtons() {
         randomButton.onTap = { [weak self] in
-            guard let self = self else { return }
-            self.randomMoviesTapped()
+            guard let strongSelf = self else { return }
+            strongSelf.randomMoviesTapped()
         }
         
         startOverButton.onTap = { [weak self] in
-            guard let self = self else { return }
-            self.startOverTapped()
+            guard let strongSelf = self else { return }
+            strongSelf.startOverTapped()
+        }
+        
+        chooseRandomMovie.onTap = { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.moviesViewWithCollectionView.delegate?.startRandomHighlighting()
+        }
+        
+        movieIsWinnerView.onTap = { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.overlayView.isHidden = true
         }
     }
     
     private func randomMoviesTapped() {
+        moviesViewWithCollectionView.randomMovies = []
+        moviesViewWithCollectionView.collectionView.isHidden = false
+        setupActivityIndicator()
         isButtonHidden = true
         buttonHidden()
-        loadRandomMovies()
+        
+        presenter.loadRandomMovies { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.activityIndicator.stopAnimating()
+            strongSelf.activityIndicator.removeFromSuperview()
+        }
+        
         saveMovieToUserDefaults()
+        moviesViewWithCollectionView.collectionView.reloadData()
     }
     
     private func startOverTapped() {
-        queue.cancelAllOperations()
-        presenter.cancelRequest()
-        updateIndexCount = 0
+        activityIndicator.stopAnimating()
+        activityIndicator.removeFromSuperview()
+
         moviesViewWithCollectionView.randomMovies = []
-        
+        presenter.cancelRequest()
+
+        updateIndexCount = 0
+
         isButtonHidden = false
         buttonHidden()
         saveMovieToUserDefaults()
-        
         moviesViewWithCollectionView.collectionView.reloadData()
+        moviesViewWithCollectionView.collectionView.isHidden = true
     }
     
     @objc private func filtersButtonTapped() {
         presenter.openFilters()
     }
     
-    private func loadRandomMovies() {
-        queue.maxConcurrentOperationCount = 1
-        
-        for _ in (1...numberOfCells) {
-            queue.addOperation {
-                let group = DispatchGroup()
-                group.enter()
-                self.presenter.fetchRandomMovie {
-                    group.leave()
-                }
-                group.wait()
-            }
-        }
+    private func setupActivityIndicator() {
+        activityIndicator.isHidden = false
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = .blue
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(activityIndicator)
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        activityIndicator.startAnimating()
     }
     
     private func buttonHidden() {
         if !isButtonHidden {
             randomButton.isHidden = false
             startOverButton.isHidden = true
+            chooseRandomMovie.isHidden = true
             navigationItem.rightBarButtonItem?.isHidden = false
         } else {
             randomButton.isHidden = true
             startOverButton.isHidden = false
+            chooseRandomMovie.isHidden = false
             navigationItem.rightBarButtonItem?.isHidden = true
         }
     }
@@ -165,6 +181,7 @@ final class RandomMoviesViewController: BaseViewController {
     }
     
     private func setupButtons() {
+        
         view.addSubview(randomButton)
         NSLayoutConstraint.activate([
             randomButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.45),
@@ -172,12 +189,43 @@ final class RandomMoviesViewController: BaseViewController {
             randomButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             randomButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50)
         ])
+        
+        view.addSubview(chooseRandomMovie)
         view.addSubview(startOverButton)
         NSLayoutConstraint.activate([
+            chooseRandomMovie.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.75),
+            chooseRandomMovie.heightAnchor.constraint(equalToConstant: 50),
+            chooseRandomMovie.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            chooseRandomMovie.bottomAnchor.constraint(equalTo: startOverButton.topAnchor, constant: -10),
+            
             startOverButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.75),
-            startOverButton.heightAnchor.constraint(equalToConstant: 60),
+            startOverButton.heightAnchor.constraint(equalToConstant: 50),
             startOverButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             startOverButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+        ])
+    }
+    
+    private func setupMovieIsWinerView() {
+        movieIsWinnerView.translatesAutoresizingMaskIntoConstraints = false
+        overlayView.translatesAutoresizingMaskIntoConstraints = false
+        overlayView.backgroundColor = .black.withAlphaComponent(0.3)
+        overlayView.isUserInteractionEnabled = true
+        overlayView.isHidden = true
+        
+        view.addSubview(overlayView)
+        NSLayoutConstraint.activate([
+            overlayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            overlayView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            overlayView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            overlayView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        
+        overlayView.addSubview(movieIsWinnerView)
+        NSLayoutConstraint.activate([
+            movieIsWinnerView.topAnchor.constraint(equalTo: overlayView.topAnchor, constant: 30),
+            movieIsWinnerView.leadingAnchor.constraint(equalTo: overlayView.leadingAnchor, constant: 40),
+            movieIsWinnerView.trailingAnchor.constraint(equalTo: overlayView.trailingAnchor, constant: -40),
+            movieIsWinnerView.bottomAnchor.constraint(equalTo: overlayView.bottomAnchor, constant: -40)
         ])
     }
     
@@ -185,7 +233,6 @@ final class RandomMoviesViewController: BaseViewController {
 
 // MARK: - Extensions
 extension RandomMoviesViewController: RandomMovieViewProtocol {
-    
     func success(moviePreview: MoviePreviewModel?) {
         DispatchQueue.main.async {
             guard let presenterData = moviePreview else { return }
@@ -195,8 +242,44 @@ extension RandomMoviesViewController: RandomMovieViewProtocol {
         }
     }
     
+    func winnerMovie(moviePreview: MoviePreviewModel?) {
+        guard let presenterData = moviePreview else { return }
+        self.movieIsWinnerView.configure(moviePreview: presenterData)
+    }
+    
     func failure(error: Error) {
         print(error.localizedDescription)
+    }
+    
+}
+
+extension RandomMoviesViewController: RandomMoviesViewWithCollectionViewDelegate {
+    func openDetailsDidTap(movie id: Int?) {
+        self.presenter.openDetails(movieId: id)
+    }
+    
+    func isFavoriteMovieDidTap(movie id: Int) {
+        self.presenter.toggleFavorite(movieId: id)
+    }
+    
+    func startRandomHighlighting() {
+        chooseRandomMovie.isEnabled = false
+        moviesViewWithCollectionView.startRandomHighlighting()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + (0.3 + 0.15) * Double(presenter.numberOfCells) + 0.5) {
+            self.chooseRandomMovie.isEnabled = true
+            
+            UIView.animate(withDuration: 0.6) {
+                self.movieIsWinnerView.isHidden = false
+                self.overlayView.isHidden = false
+                self.movieIsWinnerView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+                self.movieIsWinnerView.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+            }
+        }
+    }
+    
+    func lastMovie(id: Int?) {
+        self.presenter.openMovieWinner(movieId: id)
     }
     
 }

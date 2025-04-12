@@ -78,8 +78,8 @@ final class FiltersViewController: BaseViewController {
         for filter in filterTypes {
             let filterGenreButton = FilterGenreButton(type: filter)
             filterGenreButton.onTap = { [weak self] type in
-                guard let self = self else { return }
-                self.filters.genresFilter(type)
+                guard let strongSelf = self else { return }
+                strongSelf.filters.genresFilter(type)
             }
             filterGenres.append(filterGenreButton)
         }
@@ -88,21 +88,21 @@ final class FiltersViewController: BaseViewController {
     
     private func createRatingKpCategory() {
         ratingKpCategorie.onTextChange = { [weak self] minValue, maxValue in
-            guard let self = self else { return }
+            guard let strongSelf = self else { return }
             
-            filters.ratingKp?.minValue = Float(minValue)
-            filters.ratingKp?.maxValue = Float(maxValue)
-            filters.ratingKp?.nameCategory = ratingKpCategorie.typeCategory.rawValue
+            strongSelf.filters.ratingKp?.minValue = Float(minValue)
+            strongSelf.filters.ratingKp?.maxValue = Float(maxValue)
+            strongSelf.filters.ratingKp?.nameCategory = strongSelf.ratingKpCategorie.typeCategory.rawValue
         }
     }
     
     private func createYearsCategory() {
         yearsCategorie.onTextChange = { [weak self] minValue, maxValue in
-            guard let self = self else { return }
+            guard let strongSelf = self else { return }
             
-            filters.years?.minValue = Float(minValue)
-            filters.years?.maxValue = Float(maxValue)
-            filters.years?.nameCategory = yearsCategorie.typeCategory.rawValue
+            strongSelf.filters.years?.minValue = Float(minValue)
+            strongSelf.filters.years?.maxValue = Float(maxValue)
+            strongSelf.filters.years?.nameCategory = strongSelf.yearsCategorie.typeCategory.rawValue
         }
     }
     

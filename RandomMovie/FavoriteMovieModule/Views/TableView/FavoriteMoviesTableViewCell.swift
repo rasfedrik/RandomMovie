@@ -45,7 +45,7 @@ final class FavoriteMoviesTableViewCell: UITableViewCell {
     // MARK: - Initializer
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = .mainButtonsColorAfterTapped
+//        backgroundColor = .mainButtonsColorAfterTapped
         setupUI()
     }
     

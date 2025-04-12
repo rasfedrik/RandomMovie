@@ -14,6 +14,8 @@ final class BaseButton: UIButton {
         case randomMovie = "Случайный фильм"
         case startOver = "Начать сначала"
         case applyFilters = "Применить"
+        case chooseRandomMovie = "Погнали!"
+        case closeButton = "Закрыть!"
     }
     
     private var type: ButtonsType

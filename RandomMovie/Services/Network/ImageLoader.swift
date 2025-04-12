@@ -26,6 +26,7 @@ final class ImageLoader {
         
         let urlRequest = URLRequest(url: urlString)
         let task = URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response, error in
+            guard let strongSelf = self else { return }
             
             guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
                 return
@@ -41,7 +42,7 @@ final class ImageLoader {
             }
             
             let value = data as NSData
-            self?.imageDataCashe.setObject(value, forKey: key)
+            strongSelf.imageDataCashe.setObject(value, forKey: key)
             
             completion(.success(data))
         }
