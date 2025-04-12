@@ -17,6 +17,7 @@ final class FavoriteMovieViewController: BaseViewController {
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Любимые фильмы"
     }
     
     override func viewDidAppear(_ animated: Bool) {

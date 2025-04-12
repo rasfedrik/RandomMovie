@@ -38,8 +38,9 @@ final class RandomMoviesViewController: BaseViewController {
         filtersButtonItem.tintColor = .mainButtonsColor
         navigationItem.rightBarButtonItem = filtersButtonItem
         
-        configurationButtons()
         loadMovieFromUserDefaults()
+        configurationButtons()
+        
         buttonHidden()
         setupCollectionView()
         setupButtons()
@@ -80,10 +81,9 @@ final class RandomMoviesViewController: BaseViewController {
     }
     
     private func randomMoviesTapped() {
-        moviesViewWithCollectionView.randomMovies = []
-        moviesViewWithCollectionView.collectionView.isHidden = false
-        setupActivityIndicator()
         isButtonHidden = true
+        moviesViewWithCollectionView.randomMovies = []
+        setupActivityIndicator()
         buttonHidden()
         
         presenter.loadRandomMovies { [weak self] in
@@ -93,23 +93,20 @@ final class RandomMoviesViewController: BaseViewController {
         }
         
         saveMovieToUserDefaults()
+        setupMovieIsWinerView()
         moviesViewWithCollectionView.collectionView.reloadData()
     }
     
     private func startOverTapped() {
+        isButtonHidden = false
         activityIndicator.stopAnimating()
         activityIndicator.removeFromSuperview()
-
-        moviesViewWithCollectionView.randomMovies = []
         presenter.cancelRequest()
-
+        moviesViewWithCollectionView.randomMovies = []
         updateIndexCount = 0
-
-        isButtonHidden = false
-        buttonHidden()
         saveMovieToUserDefaults()
-        moviesViewWithCollectionView.collectionView.reloadData()
-        moviesViewWithCollectionView.collectionView.isHidden = true
+        setupMovieIsWinerView()
+        buttonHidden()
     }
     
     @objc private func filtersButtonTapped() {
@@ -130,11 +127,13 @@ final class RandomMoviesViewController: BaseViewController {
     private func buttonHidden() {
         if !isButtonHidden {
             randomButton.isHidden = false
+            moviesViewWithCollectionView.collectionView.isHidden = true
             startOverButton.isHidden = true
             chooseRandomMovie.isHidden = true
             navigationItem.rightBarButtonItem?.isHidden = false
         } else {
             randomButton.isHidden = true
+            moviesViewWithCollectionView.collectionView.isHidden = false
             startOverButton.isHidden = false
             chooseRandomMovie.isHidden = false
             navigationItem.rightBarButtonItem?.isHidden = true
