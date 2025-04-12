@@ -17,13 +17,16 @@ final class FavoriteMovieViewController: BaseViewController {
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .mainButtonsColorAfterTapped
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         presenter.fetchFavoriteMovies()
         setupUI()
+        tableView.onTap = { [weak self] id in
+            guard let strongSelf = self else { return }
+            strongSelf.presenter.openDetails(by: id)
+        }
     }
     
     // MARK: - Setup UI

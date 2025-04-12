@@ -19,8 +19,8 @@ final class MovieDetailsViewController: BaseViewController {
         presenter.fetchMovieDetails()
         setupScrollView()
         scrollView.onTap = { [weak self] id in
-            guard let self = self else { return }
-            self.presenter.toggleFavorite(id: id)
+            guard let strongSelf = self else { return }
+            strongSelf.presenter.toggleFavorite(id: id)
             print(id)
         }
     }

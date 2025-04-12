@@ -16,15 +16,6 @@ struct MoviePreviewModel: Codable, MoviewModelProtocol {
     let rating: Rating?
     var posterData: Data?
     
-//    init(id: Int?, name: String?, alternativeName: String?, posterData: UIImage?, rating: Rating?, poster: Poster?) {
-//        self.id = id
-//        self.name = name
-//        self.alternativeName = alternativeName
-//        self.posterData = posterData?.jpegData(compressionQuality: 0.8)
-//        self.rating = rating
-//        self.poster = poster
-//    }
-    
     func getPosterImage() -> UIImage? {
         guard let data = posterData else { return nil }
         return UIImage(data: data)

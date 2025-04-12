@@ -64,10 +64,10 @@ final class MovieDetailsScrollView: UIScrollView {
     
     // MARK: - Methods
     @objc private func starTapped() {
-        guard let movieID = movieID else { return }
+        guard let movieId = movieID else { return }
         isFavorite.toggle()
         UIView.animate(withDuration: 0.3) {
-            self.onTap?(self.movieID ?? 0)
+            self.onTap?(movieId)
         }
     }
     
@@ -88,14 +88,12 @@ final class MovieDetailsScrollView: UIScrollView {
             contentView.widthAnchor.constraint(equalTo: widthAnchor),
             
             posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            posterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 50),
+            posterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -50),
             posterImageView.heightAnchor.constraint(equalToConstant: 450),
             
             favoriteButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
-            favoriteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            favoriteButton.widthAnchor.constraint(equalToConstant: 44),
-            favoriteButton.heightAnchor.constraint(equalToConstant: 44),
+            favoriteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             
             movieNameLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 16),
             movieNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),

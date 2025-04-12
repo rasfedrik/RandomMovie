@@ -16,7 +16,6 @@ protocol MovieDetailsViewPresenterProtocol: AnyObject {
     init(view: MovieDetailsViewProtocol, movieId: Int?, networkDataFetch: NetworkDataFetch!)
     func fetchMovieDetails()
     func toggleFavorite(id: Int?)
-    func isFavoriteMovie() -> Bool
 }
 
 final class MovieDetailsPresenter: MovieDetailsViewPresenterProtocol {
@@ -39,35 +38,34 @@ final class MovieDetailsPresenter: MovieDetailsViewPresenterProtocol {
         favoriteService.toggleFavorite(movieId: id)
     }
     
-    func isFavoriteMovie() -> Bool {
-        guard let movieId = movieId else { return false }
-        return favoriteService.isFavorite(movieId: movieId)
-    }
-    
     func fetchMovieDetails() {
         networkDataFetch.fetchData(
             endPoint: .movieByID(movieId),
             expecting: RandomMovieModel?.self) { [weak self] result in
-                guard let self = self else { return }
+                guard let strongSelf = self else { return }
                 
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let movie):
                         guard let movie = movie else { return }
                         
-                        self.fetchPosterImage(url: movie.poster?.url) { result in
+                        strongSelf.fetchPosterImage(url: movie.poster?.url) { result in
                             switch result {
                             case .success(let poster):
-                                self.view?.details(
-                                    movieDetails: movie,
-                                    posterData: poster
-                                )
+                                if let view = strongSelf.view {
+                                    view.details(
+                                        movieDetails: movie,
+                                        posterData: poster
+                                    )
+                                }
                             case .failure(let error):
                                 print("Failed to load image:", error)
                             }
                         }
                     case .failure(let error):
-                        self.view?.failure(error: error)
+                        if let view = strongSelf.view {
+                            view.failure(error: error)
+                        }
                     }
                 }
             }

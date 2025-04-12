@@ -12,8 +12,9 @@ protocol FavoriteMovieViewProtocol: AnyObject {
 }
 
 protocol FavoriteMoviePresenterProtocol: AnyObject {
-    init(view: FavoriteMovieViewProtocol, networkDataFetch: NetworkDataFetchProtocol)
+    init(view: FavoriteMovieViewProtocol, networkDataFetch: NetworkDataFetchProtocol, router: FavoriteMovieRouter)
     func fetchFavoriteMovies()
+    func openDetails(by id: Int)
 }
 
 final class FavoriteMoviePresenter: FavoriteMoviePresenterProtocol {
@@ -21,13 +22,19 @@ final class FavoriteMoviePresenter: FavoriteMoviePresenterProtocol {
     weak var view: FavoriteMovieViewProtocol?
     private let networkDataFetch: NetworkDataFetchProtocol!
     private var movies: [MoviePreviewModel] = []
-    init(view: FavoriteMovieViewProtocol, networkDataFetch: NetworkDataFetchProtocol) {
+    private let router: FavoriteMovieRouter
+    init(view: FavoriteMovieViewProtocol, networkDataFetch: NetworkDataFetchProtocol, router: FavoriteMovieRouter) {
         self.view = view
         self.networkDataFetch = networkDataFetch
+        self.router = router
+    }
+    
+    // MARK: - Navigation
+    func openDetails(by id: Int) {
+        router.openMovieDetails(movieId: id)
     }
     
     // MARK: - Methods
-    
     private func sortByName() {
         movies.sort {
             guard let name1 = $0.name, let name2 = $1.name else { return false }
@@ -36,13 +43,14 @@ final class FavoriteMoviePresenter: FavoriteMoviePresenterProtocol {
     }
     
     // MARK: - Fetch Movies
-    
     func fetchFavoriteMovies() {
         movies.removeAll()
         
         let savedMoviesID = FavoriteService().getAllFavorites()
         guard !savedMoviesID.isEmpty else {
-            view?.showAllFavoriteMovies(moviePreview: [])
+            if let view = self.view {
+                view.showAllFavoriteMovies(moviePreview: [])
+            }
             return
         }
         
@@ -51,7 +59,7 @@ final class FavoriteMoviePresenter: FavoriteMoviePresenterProtocol {
         for movieID in savedMoviesID {
             group.enter()
             networkDataFetch.fetchData(endPoint: .movieByID(movieID), expecting: MoviePreviewModel?.self) { [weak self] result in
-                guard let self = self else {
+                guard let strongSelf = self else {
                     group.leave()
                     return
                 }
@@ -65,13 +73,13 @@ final class FavoriteMoviePresenter: FavoriteMoviePresenterProtocol {
                             return
                         }
                         
-                        self.loadPoster(movie.poster?.url) { result in
+                        strongSelf.loadPoster(movie.poster?.url) { result in
                             switch result {
                                 
                             case .success(let poster):
                                 movie.posterData = poster
                                 DispatchQueue.main.async {
-                                    self.movies.append(movie)
+                                    strongSelf.movies.append(movie)
                                 }
                             case .failure(let error):
                                 print("Failed to load image:", error)
@@ -86,12 +94,14 @@ final class FavoriteMoviePresenter: FavoriteMoviePresenterProtocol {
             }
         }
         group.notify(queue: .main) { [weak self] in
-            guard let self = self else {
+            guard let strongSelf = self else {
                 group.leave()
                 return
             }
-            self.sortByName()
-            self.view?.showAllFavoriteMovies(moviePreview: movies)
+            strongSelf.sortByName()
+            if let view = strongSelf.view {
+                view.showAllFavoriteMovies(moviePreview: strongSelf.movies)
+            }
         }
     }
     
