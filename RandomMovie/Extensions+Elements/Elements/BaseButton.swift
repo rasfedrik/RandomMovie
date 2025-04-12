@@ -11,7 +11,7 @@ final class BaseButton: UIButton {
     
     //MARK: - ButtonsType
     enum ButtonsType: String {
-        case randomMovie = "Случайный фильм"
+        case randomMovie = "Случайные фильмы"
         case startOver = "Начать сначала"
         case applyFilters = "Применить"
         case chooseRandomMovie = "Погнали!"
