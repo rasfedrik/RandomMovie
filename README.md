@@ -27,22 +27,21 @@
 📸 Скриншоты
 
 Главный экран  
-<img width="392" alt="Снимок экрана 2025-04-12 в 21 21 33" src="https://github.com/user-attachments/assets/d64ec686-8f14-4a5f-9ed4-d0c73dd0c7b4" />
+<img width="392" alt="Снимок экрана 2025-04-12 в 21 21 33" src="https://github.com/user-attachments/assets/02ae6575-61bc-4d86-b2be-045536d2ece0" />
 
 Фильтры  
-<img width="400" alt="Снимок экрана 2025-04-12 в 21 18 10" src="https://github.com/user-attachments/assets/2ab49273-dc34-49ea-8a40-99935876ceac" />
+<img width="400" alt="Снимок экрана 2025-04-12 в 21 18 10" src="https://github.com/user-attachments/assets/b09d7a0e-d25c-4415-b7a7-7f647658a844" />
 
 Девять случайных фильмов  
-<img width="387" alt="Снимок экрана 2025-04-12 в 21 19 03" src="https://github.com/user-attachments/assets/bccc4058-d9f3-41e6-a821-6862c52dc50b" />
+<img width="387" alt="Снимок экрана 2025-04-12 в 21 19 03" src="https://github.com/user-attachments/assets/49afa48b-e07d-480b-9acb-ab232ee81075" />
 
 Любимые фильмы  
-<img width="383" alt="Снимок экрана 2025-04-12 в 21 19 23" src="https://github.com/user-attachments/assets/6acb64e7-1b58-4df9-b245-549210e2c7c2" />
+<img width="383" alt="Снимок экрана 2025-04-12 в 21 19 23" src="https://github.com/user-attachments/assets/f858ceae-6139-41a7-9c25-27778162ae16" />
 
 Описание  
-<img width="391" alt="Снимок экрана 2025-04-12 в 21 20 14" src="https://github.com/user-attachments/assets/87782c81-a629-4ced-9583-c0d5f665bd2a" />
+<img width="391" alt="Снимок экрана 2025-04-12 в 21 20 14" src="https://github.com/user-attachments/assets/4d658af2-33c2-4f75-b8b8-f31bf9d5139a" />
 
 Фильм который придётся смотреть  
-<img width="392" alt="Снимок экрана 2025-04-12 в 21 20 36" src="https://github.com/user-attachments/assets/b76b6ba2-a36c-48c8-b759-36c147e816bc" />
+<img width="392" alt="Снимок экрана 2025-04-12 в 21 20 36" src="https://github.com/user-attachments/assets/aa3dbf52-ade8-4a5d-ac67-3d84aea6a146" />
 
 🎉 Приятного просмотра!
-
