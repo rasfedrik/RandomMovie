@@ -52,6 +52,7 @@ final class MovieDetailsScrollView: UIScrollView {
     private let descriptionLabel = BaseLabel()
     private let genreLabel = BaseLabel()
     
+    // MARK: - Initializer
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()

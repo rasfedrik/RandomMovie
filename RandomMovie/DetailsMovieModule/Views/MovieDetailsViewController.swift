@@ -11,28 +11,23 @@ final class MovieDetailsViewController: BaseViewController {
     
     // MARK: - Properties
     var presenter: MovieDetailsPresenter!
-    private let scrollView = MovieDetailsScrollView()
+    private let contentView = MovieContentView()
     
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupContentView()
         presenter.fetchMovieDetails()
-        setupScrollView()
-        scrollView.onTap = { [weak self] id in
-            guard let strongSelf = self else { return }
-            strongSelf.presenter.toggleFavorite(id: id)
-            print(id)
-        }
     }
     
     // MARK: - Methods
-    private func setupScrollView() {
-        view.addSubview(scrollView)
+    private func setupContentView() {
+        view.addSubview(contentView)
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
@@ -41,18 +36,22 @@ final class MovieDetailsViewController: BaseViewController {
 // MARK: - Extensions
 extension MovieDetailsViewController: MovieDetailsViewProtocol {
     
-    func details(movieDetails: RandomMovieModel?, posterData: Data?) {
-        let movieID = movieDetails?.id ?? 0
-        var name = movieDetails?.name ?? movieDetails?.alternativeName ?? "Название отсутствует"
-        let year = movieDetails?.year ?? 0
-        name += " (\(year))"
-        let description = movieDetails?.description ?? "Нет описания"
-        var posterImage: UIImage?
-        if let data = posterData {
-            posterImage = UIImage(data: data)
-        }
+    func details(movieDetails: MovieDetailsModel?) {
+        contentView.applySnapShot(movie: movieDetails)
         
-        scrollView.configure(id: movieID, posterImage: posterImage, movieName: name, description: description, isFavorite: FavoriteService().isFavorite(movieId: movieID))
+        contentView.collectionView.reloadData()
+//        let movieID = movieDetails?.id ?? 0
+//        var name = movieDetails?.name ?? movieDetails?.alternativeName ?? "Название отсутствует"
+//        let year = movieDetails?.year ?? 0
+//        name += " (\(year))"
+//        let description = movieDetails?.description ?? "Нет описания"
+//        
+//        var posterImage: UIImage?
+//        if let data = movieDetails?.posterData {
+//            posterImage = UIImage(data: data)
+//        }
+//        
+//        scrollView.configure(id: movieID, posterImage: posterImage, movieName: name, description: description, isFavorite: FavoriteService().isFavorite(movieId: movieID))
     }
     
     func failure(error: Error) {

@@ -119,8 +119,6 @@ final class RandomMoviePresenter: RandomMoviewPresenterProtocol {
                     case .success(let movie):
                         guard var movie = movie else { return }
                         
-                        
-                        
                         strongSelf.fetchPosterImage(movie.poster?.url) { result in
                             switch result {
                                 

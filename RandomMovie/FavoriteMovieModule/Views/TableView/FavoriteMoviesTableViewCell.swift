@@ -45,7 +45,6 @@ final class FavoriteMoviesTableViewCell: UITableViewCell {
     // MARK: - Initializer
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-//        backgroundColor = .mainButtonsColorAfterTapped
         setupUI()
     }
     
@@ -55,26 +54,26 @@ final class FavoriteMoviesTableViewCell: UITableViewCell {
     
     // MARK: - Setup UI
     private func setupUI() {
-        addSubview(posterImageView)
-        addSubview(movieNameLabel)
-        addSubview(movieAlternativeNameLabel)
-        addSubview(ratingLabel)
+        contentView.addSubview(posterImageView)
+        contentView.addSubview(movieNameLabel)
+        contentView.addSubview(movieAlternativeNameLabel)
+        contentView.addSubview(ratingLabel)
         
         NSLayoutConstraint.activate([
-            posterImageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.2),
-            posterImageView.topAnchor.constraint(equalTo: topAnchor, constant: 2),
-            posterImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 2),
-            posterImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2),
+            posterImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.2),
+            posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 2),
+            posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
+            posterImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -2),
             
-            movieNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            movieNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
             movieNameLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 5),
-            movieNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            movieNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
             movieAlternativeNameLabel.topAnchor.constraint(equalTo: movieNameLabel.bottomAnchor, constant: 2),
             movieAlternativeNameLabel.leadingAnchor.constraint(equalTo: movieNameLabel.leadingAnchor),
             movieAlternativeNameLabel.trailingAnchor.constraint(equalTo: movieNameLabel.trailingAnchor),
             
-            ratingLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
+            ratingLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5),
             ratingLabel.leadingAnchor.constraint(equalTo: movieNameLabel.leadingAnchor),
             ratingLabel.trailingAnchor.constraint(equalTo: movieNameLabel.trailingAnchor)
 

@@ -68,17 +68,17 @@ final class RandomCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Constrains
     private func setupElements() {
-        addSubview(posterImageView)
-        addSubview(movieNameLabel)
-        addSubview(favoriteButton)
+        contentView.addSubview(posterImageView)
+        contentView.addSubview(movieNameLabel)
+        contentView.addSubview(favoriteButton)
         NSLayoutConstraint.activate([
-            posterImageView.topAnchor.constraint(equalTo: topAnchor),
-            posterImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.8),
-            posterImageView.widthAnchor.constraint(equalTo: widthAnchor),
+            posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            posterImageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.8),
+            posterImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
             
             movieNameLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 2),
-            movieNameLabel.widthAnchor.constraint(equalTo: widthAnchor),
-            movieNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            movieNameLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor),
+            movieNameLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
             favoriteButton.topAnchor.constraint(equalTo: posterImageView.topAnchor, constant: 5),
             favoriteButton.trailingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: -5),
@@ -88,10 +88,10 @@ final class RandomCollectionViewCell: UICollectionViewCell {
         
         addSubview(highLightedBorderView)
         NSLayoutConstraint.activate([
-            highLightedBorderView.topAnchor.constraint(equalTo: topAnchor),
-            highLightedBorderView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            highLightedBorderView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            highLightedBorderView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            highLightedBorderView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            highLightedBorderView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            highLightedBorderView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            highLightedBorderView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     

@@ -8,7 +8,8 @@
 import Foundation
 
 protocol MovieDetailsViewProtocol: AnyObject {
-    func details(movieDetails: RandomMovieModel?, posterData: Data?)
+    func details(movieDetails: MovieDetailsModel?)
+//    func details(movieDetails: RandomMovieModel?, posterData: Data?)
     func failure(error: Error)
 }
 
@@ -32,6 +33,8 @@ final class MovieDetailsPresenter: MovieDetailsViewPresenterProtocol {
         self.networkDataFetch = networkDataFetch
     }
     
+    private var movieDetails: MovieDetailsModel?
+    
     // MARK: - Methods
     func toggleFavorite(id: Int?) {
         guard movieId == id, let id = id else { return }
@@ -41,27 +44,39 @@ final class MovieDetailsPresenter: MovieDetailsViewPresenterProtocol {
     func fetchMovieDetails() {
         networkDataFetch.fetchData(
             endPoint: .movieByID(movieId),
-            expecting: RandomMovieModel?.self) { [weak self] result in
+            expecting: MovieDetailsModel?.self) { [weak self] result in
                 guard let strongSelf = self else { return }
                 
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let movie):
-                        guard let movie = movie else { return }
+                        guard var movie = movie else { return }
+                        guard let persons = movie.persons else { return }
                         
-                        strongSelf.fetchPosterImage(url: movie.poster?.url) { result in
+                        
+                        strongSelf.fetchImage(url: movie.poster?.url) { result in
                             switch result {
                             case .success(let poster):
+                                movie.posterData = poster
                                 if let view = strongSelf.view {
-                                    view.details(
-                                        movieDetails: movie,
-                                        posterData: poster
-                                    )
+                                    view.details(movieDetails: movie)
                                 }
                             case .failure(let error):
                                 print("Failed to load image:", error)
                             }
                         }
+                        
+//                        for person in persons {
+//                            strongSelf.fetchImage(url: person.photo) { result in
+//                                switch result {
+//                                case .success(let imagesData):
+//                                    movie.personPhotoData = imagesData
+//                                case .failure(let error):
+//                                    print("Failed to load image:", error)
+//                                }
+//                            }
+//                        }
+                        
                     case .failure(let error):
                         if let view = strongSelf.view {
                             view.failure(error: error)
@@ -71,7 +86,7 @@ final class MovieDetailsPresenter: MovieDetailsViewPresenterProtocol {
             }
     }
     
-    private func fetchPosterImage(url: String?, completion: @escaping (Result<Data, NetworkError>) -> Void) {
+    private func fetchImage(url: String?, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         
         let urlString = url ?? "https://image.openmoviedb.com/kinopoisk-st-images//actor_iphone/iphone360_6580433.jpg"
         guard let url = URL(string: urlString) else {
