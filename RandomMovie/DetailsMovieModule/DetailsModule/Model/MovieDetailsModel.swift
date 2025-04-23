@@ -15,15 +15,14 @@ struct MovieDetailsModel: Codable {
     let year: Int?
     let status: String?
     let genres: [Genre]?
-    let persons: [Person]?
+    var persons: [Person]?
     let poster: Poster?
     let description: String?
     var isFavorite: Bool?
     
     var posterData: Data?
-    var personPhotoData: Data?
     
-    func getImage(data: Data?) -> UIImage? {
+    func getPoster(data: Data?) -> UIImage? {
         guard let data = data else { return nil }
         return UIImage(data: data)
     }
@@ -54,6 +53,13 @@ struct MovieDetailsModel: Codable {
         let name: String?
         let description: String?
         let profession: String?
+        var personPhotoData: Data?
+        
+        func getPhoto(data: Data?) -> UIImage? {
+            guard let data = data else { return nil }
+            return UIImage(data: data)
+        }
     }
-    
+
 }
+

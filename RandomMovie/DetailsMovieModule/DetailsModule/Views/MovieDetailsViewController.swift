@@ -18,6 +18,7 @@ final class MovieDetailsViewController: BaseViewController {
         super.viewDidLoad()
         setupContentView()
         presenter.fetchMovieDetails()
+        contentViewOnTap()
     }
     
     // MARK: - Methods
@@ -31,27 +32,24 @@ final class MovieDetailsViewController: BaseViewController {
         ])
     }
     
+    private func contentViewOnTap() {
+        contentView.onTap = { [weak self] id in
+            guard let strongSelf = self else { return }
+            strongSelf.presenter.toggleFavorite(id: id)
+        }
+        contentView.showAllInfoOnTap = { [weak self] type in
+            guard let strongSelf = self else { return }
+            strongSelf.presenter.openFullInfo(type: type)
+        }
+    }
+    
 }
 
 // MARK: - Extensions
 extension MovieDetailsViewController: MovieDetailsViewProtocol {
     
     func details(movieDetails: MovieDetailsModel?) {
-        contentView.applySnapShot(movie: movieDetails)
-        
-        contentView.collectionView.reloadData()
-//        let movieID = movieDetails?.id ?? 0
-//        var name = movieDetails?.name ?? movieDetails?.alternativeName ?? "Название отсутствует"
-//        let year = movieDetails?.year ?? 0
-//        name += " (\(year))"
-//        let description = movieDetails?.description ?? "Нет описания"
-//        
-//        var posterImage: UIImage?
-//        if let data = movieDetails?.posterData {
-//            posterImage = UIImage(data: data)
-//        }
-//        
-//        scrollView.configure(id: movieID, posterImage: posterImage, movieName: name, description: description, isFavorite: FavoriteService().isFavorite(movieId: movieID))
+        contentView.applySnapshot(movie: movieDetails)
     }
     
     func failure(error: Error) {

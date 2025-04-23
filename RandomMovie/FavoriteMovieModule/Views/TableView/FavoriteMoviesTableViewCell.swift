@@ -10,7 +10,7 @@ import UIKit
 final class FavoriteMoviesTableViewCell: UITableViewCell {
     
     // MARK: - Identifier
-    static let id = "CustomTableViewCell"
+    static let identifier = "CustomTableViewCell"
     
     // MARK: - UI Elements
     private var posterImageView: UIImageView = {
@@ -76,7 +76,6 @@ final class FavoriteMoviesTableViewCell: UITableViewCell {
             ratingLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5),
             ratingLabel.leadingAnchor.constraint(equalTo: movieNameLabel.leadingAnchor),
             ratingLabel.trailingAnchor.constraint(equalTo: movieNameLabel.trailingAnchor)
-
         ])
     }
     

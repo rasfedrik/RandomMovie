@@ -1,5 +1,5 @@
 //
-//  MovieDetailsPosterCell.swift
+//  PosterCell.swift
 //  RandomMovie
 //
 //  Created by Семён Беляков on 14.04.2025.
@@ -7,18 +7,10 @@
 
 import UIKit
 
-final class MovieDetailsPosterCell: UICollectionViewCell {
+final class PosterCell: UICollectionViewCell, CustomCompositionLayoutCellProtocol {
     
     // MARK: - Properties
-    static let identifier = "MovieDetailsPosterCell"
-    private var movieID: Int?
-    private var isFavorite: Bool = false {
-        didSet {
-            let starImage = isFavorite ? UIImage(systemName: "star.fill") : UIImage(systemName: "star")
-            favoriteButton.setImage(starImage, for: .normal)
-        }
-    }
-    var onTap: ((Int) -> Void)?
+    var onTapFavoriteButton: ((Int) -> Void)?
     
     // MARK: - UI Elements
     private let posterImageView: UIImageView = {
@@ -32,7 +24,7 @@ final class MovieDetailsPosterCell: UICollectionViewCell {
     private var favoriteButton: UIButton = {
         let favorite = UIButton(type: .roundedRect)
         favorite.translatesAutoresizingMaskIntoConstraints = false
-        favorite.tintColor = UIColor.mainButtonsColor
+        favorite.setImage(UIImage(systemName: "star.fill"), for: .normal)
         return favorite
     }()
     
@@ -44,7 +36,6 @@ final class MovieDetailsPosterCell: UICollectionViewCell {
     // MARK: - Initializer
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .red
         setupUI()
         favoriteButton.addTarget(self, action: #selector(starTapped), for: .touchUpInside)
     }
@@ -55,40 +46,27 @@ final class MovieDetailsPosterCell: UICollectionViewCell {
     
     // MARK: - Methods
     @objc private func starTapped() {
-        guard let movieId = movieID else { return }
-        isFavorite.toggle()
         UIView.animate(withDuration: 0.3) {
-            self.onTap?(movieId)
+            self.favoriteButton.transform = CGAffineTransform(scaleX: 2, y: 2)
+            self.favoriteButton.transform = .identity
         }
     }
     
     // MARK: - Constraints
     private func setupUI() {
         contentView.addSubview(posterImageView)
-        contentView.addSubview(favoriteButton)
         
         NSLayoutConstraint.activate([
-                    
             posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 50),
-            posterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -50),
-            posterImageView.heightAnchor.constraint(equalToConstant: 450),
-                    
-            favoriteButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
-            favoriteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15)
+            posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
+            posterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
+            posterImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     
     // MARK: - Configure
     func configure(with model: MovieDetailsModel?) {
-        
-        guard let model = model else {
-            print("Configure cell failed")
-            return
-        }
-        
-        self.movieID = model.id
-        posterImageView.image = model.getImage(data: model.posterData)
-        self.isFavorite = FavoriteService().isFavorite(movieId: model.id ?? 0)
+        guard let model = model else { return }
+        posterImageView.image = model.getPoster(data: model.posterData) ?? UIImage(named: "placeholder")
     }
 }

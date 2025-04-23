@@ -9,7 +9,7 @@ import UIKit
 
 protocol FavoriteMoviesModuleBuilderProtocol {
     func createFavoriteMovieModule(navigationController: UINavigationController) -> UIViewController
-    func createMovieDetailsModule(movieId: Int?) -> UIViewController
+    func createMovieDetailsModule(navigationController: UINavigationController, movieId: Int?) -> UIViewController
 }
 
 final class FavoritesMovieModuleBuilder: FavoriteMoviesModuleBuilderProtocol {
@@ -25,10 +25,11 @@ final class FavoritesMovieModuleBuilder: FavoriteMoviesModuleBuilderProtocol {
     }
     
     // MARK: - DetailsModule
-    func createMovieDetailsModule(movieId: Int?) -> UIViewController {
+    func createMovieDetailsModule(navigationController: UINavigationController, movieId: Int?) -> UIViewController {
         let view = MovieDetailsViewController()
         let networkDataFetch = NetworkDataFetch()
-        let presenter = MovieDetailsPresenter(view: view, movieId: movieId, networkDataFetch: networkDataFetch)
+        let router = DetailsMovieRouter(view: view, navigationController: navigationController)
+        let presenter = MovieDetailsPresenter(view: view, movieId: movieId, networkDataFetch: networkDataFetch, navigationController: navigationController, router: router)
         view.presenter = presenter
         return view
     }

@@ -12,7 +12,6 @@ protocol FiltersRouterProtocol {
 }
 
 final class FiltersRouter: FiltersRouterProtocol {
-    
     weak var view: FiltersViewController?
     var randomMoviesRouter: RandomMoviesRouterProtocol!
     var navigationController: UINavigationController!

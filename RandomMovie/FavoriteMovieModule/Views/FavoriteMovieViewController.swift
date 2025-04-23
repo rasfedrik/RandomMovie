@@ -12,7 +12,6 @@ final class FavoriteMovieViewController: BaseViewController {
     // MARK: - Properties
     var presenter: FavoriteMoviePresenterProtocol!
     private let tableView = FavoriteMoviesTableView()
-    private let favoriteService = FavoriteService()
     
     // MARK: - ViewDidLoad
     override func viewDidLoad() {

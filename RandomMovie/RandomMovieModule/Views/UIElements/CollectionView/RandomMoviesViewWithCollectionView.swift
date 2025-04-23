@@ -161,6 +161,7 @@ extension RandomMoviesViewWithCollectionView: UICollectionViewDelegate {
         
         let posterData = randomMovies[indexPath.row]
         guard let movieId = posterData?.id else { return }
+        
         self.delegate?.openDetailsDidTap(movie: movieId)
     }
 }

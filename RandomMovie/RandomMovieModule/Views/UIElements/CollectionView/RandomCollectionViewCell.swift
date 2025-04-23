@@ -100,6 +100,8 @@ final class RandomCollectionViewCell: UICollectionViewCell {
         guard let movieID = movieID else { return }
         isFavorite.toggle()
         UIView.animate(withDuration: 0.3) {
+            self.favoriteButton.transform = CGAffineTransform(scaleX: 2, y: 2)
+            self.favoriteButton.transform = .identity
             self.favoriteMovieTapped?(movieID)
         }
     }
