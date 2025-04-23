@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct RandomMovieModel: Codable, MoviewModelProtocol {
+struct RandomMovieModel: Codable {
     
     let id: Int?
     let name: String?
@@ -97,13 +97,13 @@ struct RandomMovieModel: Codable, MoviewModelProtocol {
         let url: String?
     }
     
-    // MARK: - WatchItem
+    // MARK: - Logo
     struct Logo: Codable {
         let url: String?
         let previewUrl: String?
     }
     
-    // MARK: - WatchItem
+    // MARK: - Person
     struct Person: Codable {
         let id: Int?
         let photo: String?

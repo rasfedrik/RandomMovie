@@ -8,6 +8,8 @@
 import UIKit
 
 protocol RandomMoviesRouterProtocol {
+    init(navigationController: UINavigationController?, moduleBuilder: RandomModuleBuilderProtocol)
+    
     func openRandomMovies(with filters: FiltersModel)
     func popRandomMovies(with filters: FiltersModel)
     func openFilters()
@@ -48,7 +50,7 @@ final class RandomMoviesRouter: RandomMoviesRouterProtocol {
     
     func openMovieDetails(movieId: Int?) {
         guard let navController = navigationController else { return }
-        let detailsVC = moduleBuilder.createMovieDetailsModule(movieId: movieId)
+        let detailsVC = moduleBuilder.createMovieDetailsModule(navigationController: navController, movieId: movieId)
         navController.pushViewController(detailsVC, animated: true)
     }
     

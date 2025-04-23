@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct MoviePreviewModel: Codable, MoviewModelProtocol {
+struct MoviePreviewModel: Codable {
     
     let id: Int?
     let name: String?

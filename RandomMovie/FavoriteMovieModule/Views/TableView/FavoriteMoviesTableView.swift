@@ -28,17 +28,9 @@ final class FavoriteMoviesTableView: UITableView {
     // MARK: - Methods
     private func setupTableView() {
         translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            topAnchor.constraint(equalTo: topAnchor),
-            leadingAnchor.constraint(equalTo: leadingAnchor),
-            trailingAnchor.constraint(equalTo: trailingAnchor),
-            bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
-        
         dataSource = self
         delegate = self
-        
-        register(FavoriteMoviesTableViewCell.self, forCellReuseIdentifier: FavoriteMoviesTableViewCell.id)
+        register(FavoriteMoviesTableViewCell.self, forCellReuseIdentifier: FavoriteMoviesTableViewCell.identifier)
     }
     
 }
@@ -56,7 +48,7 @@ extension FavoriteMoviesTableView: UITableViewDataSource, UITableViewDelegate {
         }
         
         guard let cell = dequeueReusableCell(
-            withIdentifier: FavoriteMoviesTableViewCell.id,
+            withIdentifier: FavoriteMoviesTableViewCell.identifier,
             for: indexPath) as? FavoriteMoviesTableViewCell
         else { return UITableViewCell() }
         

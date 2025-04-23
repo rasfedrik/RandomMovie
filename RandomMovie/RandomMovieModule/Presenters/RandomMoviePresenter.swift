@@ -34,7 +34,7 @@ final class RandomMoviePresenter: RandomMoviewPresenterProtocol {
     private let networkDataFetch: NetworkDataFetchProtocol!
     private let favoriteService = FavoriteService()
     var queue = OperationQueue()
-    var numberOfCells = 9
+    var numberOfCells = 1
     var moviePreview: [MoviePreviewModel] = []
     
     init(view: RandomMovieViewProtocol, networkDataFetch: NetworkDataFetchProtocol, router: RandomMoviesRouterProtocol) {
@@ -118,8 +118,6 @@ final class RandomMoviePresenter: RandomMoviewPresenterProtocol {
                         
                     case .success(let movie):
                         guard var movie = movie else { return }
-                        
-                        
                         
                         strongSelf.fetchPosterImage(movie.poster?.url) { result in
                             switch result {

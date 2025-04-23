@@ -9,7 +9,6 @@ import UIKit
 
 final class FilterGenreButton: UIButton {
     
-    
     private enum UserDefaultsKeys: String {
         case isFilterTapped = "isFilterTapped"
     }

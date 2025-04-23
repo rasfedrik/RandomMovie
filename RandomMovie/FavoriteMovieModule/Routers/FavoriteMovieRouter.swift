@@ -31,7 +31,7 @@ final class FavoriteMovieRouter: FavoriteMovieRouterProtocol {
     
     func openMovieDetails(movieId: Int?) {
         guard let navController = navigationController else { return }
-        let detailsVC = moduleBuilder.createMovieDetailsModule(movieId: movieId)
+        let detailsVC = moduleBuilder.createMovieDetailsModule(navigationController: navController, movieId: movieId)
         navController.pushViewController(detailsVC, animated: true)
     }
 }
