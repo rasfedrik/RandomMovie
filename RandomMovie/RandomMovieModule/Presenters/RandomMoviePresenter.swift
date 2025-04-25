@@ -34,7 +34,7 @@ final class RandomMoviePresenter: RandomMoviewPresenterProtocol {
     private let networkDataFetch: NetworkDataFetchProtocol!
     private let favoriteService = FavoriteService()
     var queue = OperationQueue()
-    var numberOfCells = 1
+    var numberOfCells = 9
     var moviePreview: [MoviePreviewModel] = []
     
     init(view: RandomMovieViewProtocol, networkDataFetch: NetworkDataFetchProtocol, router: RandomMoviesRouterProtocol) {

@@ -80,10 +80,14 @@ final class FavoriteMoviesTableViewCell: UITableViewCell {
     }
     
     // MARK: - Configure
-    func configure(poster: UIImage?, name: String?, alternativeName: String?, rating: String?) {
-        self.posterImageView.image = poster
-        self.movieNameLabel.text = name
-        self.movieAlternativeNameLabel.text = alternativeName
+//    func configure(poster: UIImage?, name: String?, alternativeName: String?, rating: String?) {
+    func configure(with model: MoviePreviewModel?) {
+        guard let model = model else { return }
+        self.posterImageView.image = model.getPosterImage() ?? UIImage(named: "placeholder")
+        self.movieNameLabel.text = model.name ?? "-"
+        self.movieAlternativeNameLabel.text = model.alternativeName ?? ""
+        
+        let rating = "\(model.rating?.kp ?? 0.0)"
         self.ratingLabel.text = rating
     }
     

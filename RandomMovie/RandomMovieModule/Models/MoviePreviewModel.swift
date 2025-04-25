@@ -15,6 +15,9 @@ struct MoviePreviewModel: Codable {
     let poster: Poster?
     let rating: Rating?
     var posterData: Data?
+    var isFavorite: Bool {
+        return FavoriteService().isFavorite(movieId: id ?? 0)
+    }
     
     func getPosterImage() -> UIImage? {
         guard let data = posterData else { return nil }

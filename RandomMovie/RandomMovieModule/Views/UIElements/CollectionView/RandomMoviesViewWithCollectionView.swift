@@ -136,20 +136,11 @@ extension RandomMoviesViewWithCollectionView: UICollectionViewDataSource {
         else { return UICollectionViewCell() }
         
         if let movie = randomMovies[indexPath.item] {
-            let movieId = movie.id ?? 0
-            
-            cell.configure(
-                with: movie.getPosterImage() ?? UIImage(named: "placeholder"),
-                text: movie.name ?? movie.alternativeName,
-                movieID: movieId,
-                isFavorite: FavoriteService().isFavorite(movieId: movieId)
-            )
-            
+            cell.configure(with: movie)
             cell.favoriteMovieTapped = { [weak self] id in
                 guard let strongSelf = self else { return }
                 strongSelf.delegate?.isFavoriteMovieDidTap(movie: id)
             }
-            
         }
         return cell
     }

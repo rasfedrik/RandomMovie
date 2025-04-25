@@ -114,11 +114,12 @@ final class RandomCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Configure
-    func configure(with poster: UIImage?, text: String?, movieID: Int, isFavorite: Bool) {
-        self.posterImageView.image = poster
-        self.movieNameLabel.text = text
-        self.movieID = movieID
-        self.isFavorite = isFavorite
+    func configure(with model: MoviePreviewModel?) {
+        guard let model = model else { return }
+        self.posterImageView.image = model.getPosterImage() ?? UIImage(named: "placeholder")
+        self.movieNameLabel.text = model.name ?? "-"
+        self.movieID = model.id
+        self.isFavorite = model.isFavorite
     }
     
 }
