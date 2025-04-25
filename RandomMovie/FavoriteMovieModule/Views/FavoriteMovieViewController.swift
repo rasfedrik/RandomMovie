@@ -42,7 +42,6 @@ final class FavoriteMovieViewController: BaseViewController {
 }
 
 extension FavoriteMovieViewController: FavoriteMovieViewProtocol {
-    
     func showAllFavoriteMovies(moviePreview: [MoviePreviewModel]?) {
         if let moviePreview = moviePreview {
             DispatchQueue.main.async {

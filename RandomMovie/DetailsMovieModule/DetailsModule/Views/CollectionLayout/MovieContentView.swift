@@ -37,7 +37,7 @@ final class MovieContentView: UIView {
     private func configureCollectionView() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: MovieDetailsCollectionViewCompositionalLayout.createLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
+        collectionView.delegate = self
         // implementation in CollectionLayoutExtensions + CustomCompositionLayoutCellProtocol
         collectionView.register(PosterCell.self)
         collectionView.register(TitleCell.self)
@@ -144,5 +144,11 @@ final class MovieContentView: UIView {
         }
         
         dataSource.apply(snapshot, animatingDifferences: true)
+    }
+}
+
+extension MovieContentView: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
     }
 }

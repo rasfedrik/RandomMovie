@@ -242,7 +242,7 @@ extension RandomMoviesViewController: RandomMovieViewProtocol {
     
     func winnerMovie(moviePreview: MoviePreviewModel?) {
         guard let presenterData = moviePreview else { return }
-        self.movieIsWinnerView.configure(moviePreview: presenterData)
+        self.movieIsWinnerView.configure(with: presenterData)
     }
     
     func failure(error: Error) {

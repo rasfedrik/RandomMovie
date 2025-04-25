@@ -51,9 +51,9 @@ final class MovieWinnerView: UIView {
     }
     
     // MARK: - Configure
-    func configure(moviePreview: MoviePreviewModel) {
-        self.posterImageView.image = moviePreview.getPosterImage()
-        self.movieNameLabel.text = moviePreview.name
+    func configure(with model: MoviePreviewModel) {
+        self.posterImageView.image = model.getPosterImage()
+        self.movieNameLabel.text = model.name ?? "-"
     }
     
     // MARK: - Setup UI

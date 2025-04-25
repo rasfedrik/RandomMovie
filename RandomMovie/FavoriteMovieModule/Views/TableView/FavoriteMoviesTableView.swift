@@ -53,13 +53,7 @@ extension FavoriteMoviesTableView: UITableViewDataSource, UITableViewDelegate {
         else { return UITableViewCell() }
         
         let movie = favoriteMoviesPreviewsData[indexPath.row]
-        
-        let poster = movie.getPosterImage() ?? UIImage(named: "placeholder")
-        let name = movie.name ?? "-"
-        let alternativeName = movie.alternativeName ?? "-"
-        let rating = movie.rating?.kp ?? 0.0
-        
-        cell.configure(poster: poster, name: name, alternativeName: alternativeName, rating: "\(rating)")
+        cell.configure(with: movie)
         
         return cell
     }
