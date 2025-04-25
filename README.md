@@ -39,7 +39,7 @@
 <img width="383" alt="Снимок экрана 2025-04-12 в 21 19 23" src="https://github.com/user-attachments/assets/f858ceae-6139-41a7-9c25-27778162ae16" />
 
 Описание  
-<img width="391" alt="Снимок экрана 2025-04-12 в 21 20 14" src="https://github.com/user-attachments/assets/4d658af2-33c2-4f75-b8b8-f31bf9d5139a" />
+<img width="400" alt="Снимок экрана 2025-04-25 в 14 22 11" src="https://github.com/user-attachments/assets/8012c64d-f9b4-469e-bab1-c81783dcc031" />
 
 Фильм который придётся смотреть  
 <img width="392" alt="Снимок экрана 2025-04-12 в 21 20 36" src="https://github.com/user-attachments/assets/aa3dbf52-ade8-4a5d-ac67-3d84aea6a146" />
