@@ -80,7 +80,6 @@ final class FavoriteMoviesTableViewCell: UITableViewCell {
     }
     
     // MARK: - Configure
-//    func configure(poster: UIImage?, name: String?, alternativeName: String?, rating: String?) {
     func configure(with model: MoviePreviewModel?) {
         guard let model = model else { return }
         self.posterImageView.image = model.getPosterImage() ?? UIImage(named: "placeholder")

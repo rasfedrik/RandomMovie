@@ -10,6 +10,16 @@ import UIKit
 final class TitleCell: UICollectionViewCell, CustomCompositionLayoutCellProtocol {
     
     // MARK: - UI Elements
+    private let stackView: UIStackView = {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        
+        stack.alignment = .fill
+        stack.distribution = .fillEqually
+        return stack
+    }()
+    
     private let movieNameLabel: BaseLabel = {
         let label = BaseLabel()
         label.textAlignment = .center
@@ -18,6 +28,13 @@ final class TitleCell: UICollectionViewCell, CustomCompositionLayoutCellProtocol
     }()
     
     private let movieAlternativeNameLabel: BaseLabel = {
+        let label = BaseLabel()
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 14)
+        return label
+    }()
+    
+    private let countryNameLabel: BaseLabel = {
         let label = BaseLabel()
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 14)
@@ -36,18 +53,16 @@ final class TitleCell: UICollectionViewCell, CustomCompositionLayoutCellProtocol
 
     // MARK: - Constraints
     private func setupUI() {
-        contentView.addSubview(movieNameLabel)
-        contentView.addSubview(movieAlternativeNameLabel)
+        contentView.addSubview(stackView)
+        stackView.addArrangedSubview(movieNameLabel)
+        stackView.addArrangedSubview(movieAlternativeNameLabel)
+        stackView.addArrangedSubview(countryNameLabel)
         
         NSLayoutConstraint.activate([
-            movieNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
-            movieNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            movieNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            
-            movieAlternativeNameLabel.topAnchor.constraint(equalTo: movieNameLabel.bottomAnchor, constant: 3),
-            movieAlternativeNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            movieAlternativeNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            movieAlternativeNameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     
@@ -58,7 +73,20 @@ final class TitleCell: UICollectionViewCell, CustomCompositionLayoutCellProtocol
         let alternativeName = model.alternativeName ?? ""
         let year = model.year ?? 0
         
-        movieNameLabel.text = "\(name)"
-        movieAlternativeNameLabel.text = year == 0 ? "\(alternativeName)" : "\(alternativeName) (\(year))"
+        movieNameLabel.text = name
+        movieAlternativeNameLabel.text = alternativeName
+        
+        guard let countries = model.countries else { return }
+        var countriesNames = ""
+        for (index, country) in countries.enumerated() {
+            let country = country.name ?? ""
+            let countriesLastIndex = countries.count - 1
+            if countriesLastIndex != index {
+                countriesNames += "\(country), "
+            } else {
+                countriesNames += country
+            }
+        }
+        countryNameLabel.text = year == 0 ? countriesNames : "\(countriesNames) (\(year))"
     }
 }
