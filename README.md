@@ -42,6 +42,6 @@
 <img width="400" alt="Снимок экрана 2025-04-25 в 14 22 11" src="https://github.com/user-attachments/assets/8012c64d-f9b4-469e-bab1-c81783dcc031" />
 
 Фильм который придётся смотреть  
-<img width="392" alt="Снимок экрана 2025-04-12 в 21 20 36" src="https://github.com/user-attachments/assets/aa3dbf52-ade8-4a5d-ac67-3d84aea6a146" />
+<img width="404" alt="Снимок экрана 2025-04-27 в 01 01 29" src="https://github.com/user-attachments/assets/2b9c6be5-ddfa-48e5-8e80-2ff88e2a45b4" />
 
 🎉 Приятного просмотра!
