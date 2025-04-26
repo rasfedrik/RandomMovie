@@ -18,6 +18,7 @@ struct MovieDetailsModel: Codable {
     var persons: [Person]?
     let poster: Poster?
     let description: String?
+    let countries: [Country]?
     var isFavorite: Bool?
     
     var posterData: Data?
@@ -59,6 +60,10 @@ struct MovieDetailsModel: Codable {
             guard let data = data else { return nil }
             return UIImage(data: data)
         }
+    }
+    // MARK: - Country
+    struct Country: Codable {
+        let name: String?
     }
 
 }

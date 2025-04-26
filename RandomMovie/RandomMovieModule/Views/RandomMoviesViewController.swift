@@ -73,7 +73,7 @@ final class RandomMoviesViewController: BaseViewController {
             strongSelf.moviesViewWithCollectionView.delegate?.startRandomHighlighting()
         }
         
-        movieIsWinnerView.onTap = { [weak self] in
+        movieIsWinnerView.onTapCloseButton = { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.overlayView.isHidden = true
         }

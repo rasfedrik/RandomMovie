@@ -14,6 +14,7 @@ struct MoviePreviewModel: Codable {
     let alternativeName: String?
     let poster: Poster?
     let rating: Rating?
+    let year: Int?
     var posterData: Data?
     var isFavorite: Bool {
         return FavoriteService().isFavorite(movieId: id ?? 0)
