@@ -37,7 +37,6 @@ final class MovieContentView: UIView {
     private func configureCollectionView() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: MovieDetailsCollectionViewCompositionalLayout.createLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.delegate = self
         // implementation in CollectionLayoutExtensions + CustomCompositionLayoutCellProtocol
         collectionView.register(PosterCell.self)
         collectionView.register(TitleCell.self)
@@ -56,13 +55,14 @@ final class MovieContentView: UIView {
     }
     
     private func configureDataSource() {
-        dataSource = MovieDataSource(collectionView: collectionView) { (collectionView, indexPath, item) -> UICollectionViewCell? in
+        dataSource = MovieDataSource(collectionView: collectionView) { [weak self] (collectionView, indexPath, item) -> UICollectionViewCell? in
             
+            guard let strongSelf = self else { return UICollectionViewCell() }
             switch MovieDetailSection(rawValue: indexPath.section) {
             case .poster:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PosterCell.identifier, for: indexPath) as! PosterCell
                 
-                if let movie = self.currentMovie {
+                if let movie = strongSelf.currentMovie {
                     cell.configure(with: movie)
                     return cell
                 }
@@ -70,7 +70,7 @@ final class MovieContentView: UIView {
             case .title:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TitleCell.identifier, for: indexPath) as! TitleCell
                 
-                if let movie = self.currentMovie {
+                if let movie = strongSelf.currentMovie {
                     cell.configure(with: movie)
                     return cell
                 }
@@ -79,7 +79,7 @@ final class MovieContentView: UIView {
             case .ratings:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RatingCell.identifier, for: indexPath) as! RatingCell
                 
-                if let movie = self.currentMovie {
+                if let movie = strongSelf.currentMovie {
                     cell.configure(with: movie)
                     cell.onTapFavoriteButton = { [weak self] id in
                         guard let strongSelf = self else { return }
@@ -92,7 +92,7 @@ final class MovieContentView: UIView {
             case .description:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DescriptionCell.identifier, for: indexPath) as! DescriptionCell
                 
-                if let movie = self.currentMovie {
+                if let movie = strongSelf.currentMovie {
                     cell.configure(with: movie)
                     return cell
                 }
@@ -144,11 +144,5 @@ final class MovieContentView: UIView {
         }
         
         dataSource.apply(snapshot, animatingDifferences: true)
-    }
-}
-
-extension MovieContentView: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
     }
 }

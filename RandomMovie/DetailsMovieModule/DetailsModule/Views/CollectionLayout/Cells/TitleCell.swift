@@ -81,11 +81,7 @@ final class TitleCell: UICollectionViewCell, CustomCompositionLayoutCellProtocol
         for (index, country) in countries.enumerated() {
             let country = country.name ?? ""
             let countriesLastIndex = countries.count - 1
-            if countriesLastIndex != index {
-                countriesNames += "\(country), "
-            } else {
-                countriesNames += country
-            }
+            countriesNames += countriesLastIndex != index ? "\(country), " : country
         }
         countryNameLabel.text = year == 0 ? countriesNames : "\(countriesNames) (\(year))"
     }

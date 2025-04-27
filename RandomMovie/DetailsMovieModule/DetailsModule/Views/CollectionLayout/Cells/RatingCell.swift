@@ -113,10 +113,11 @@ final class RatingCell: UICollectionViewCell, CustomCompositionLayoutCellProtoco
     @objc private func starTapped() {
         guard let movieId = movieID else { return }
         isFavorite.toggle()
-        UIView.animate(withDuration: 0.3) {
-            self.favoriteButton.transform = CGAffineTransform(scaleX: 2, y: 2)
-            self.favoriteButton.transform = .identity
-            self.onTapFavoriteButton?(movieId)
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.favoriteButton.transform = CGAffineTransform(scaleX: 2, y: 2)
+            strongSelf.favoriteButton.transform = .identity
+            strongSelf.onTapFavoriteButton?(movieId)
         }
     }
 

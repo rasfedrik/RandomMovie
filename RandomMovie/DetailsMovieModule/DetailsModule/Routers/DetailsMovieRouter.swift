@@ -14,11 +14,11 @@ protocol DetailsMovieRouterProtocol {
 
 final class DetailsMovieRouter: DetailsMovieRouterProtocol {
     
-    weak var navigationController: UINavigationController?
-    let view: MovieDetailsViewController
+    weak var navigationController: UINavigationController!
+    weak var view: MovieDetailsViewController?
     private let moduleBuilder: DetailsModuleBuilderProtocol
     
-    init(view: MovieDetailsViewController, navigationController: UINavigationController?, moduleBuilder: DetailsModuleBuilderProtocol = DetailsModuleBuilder()) {
+    init(view: MovieDetailsViewController?, navigationController: UINavigationController?, moduleBuilder: DetailsModuleBuilderProtocol = DetailsModuleBuilder()) {
         self.view = view
         self.navigationController = navigationController
         self.moduleBuilder = moduleBuilder

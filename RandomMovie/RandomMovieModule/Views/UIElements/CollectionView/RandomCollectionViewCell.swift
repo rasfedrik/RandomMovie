@@ -66,6 +66,13 @@ final class RandomCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        movieID = nil
+        movieNameLabel.text = nil
+        posterImageView.image = UIImage(systemName: "questionmark")
+    }
+    
     // MARK: - Constrains
     private func setupElements() {
         contentView.addSubview(posterImageView)
@@ -86,7 +93,7 @@ final class RandomCollectionViewCell: UICollectionViewCell {
             favoriteButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         
-        addSubview(highLightedBorderView)
+        contentView.addSubview(highLightedBorderView)
         NSLayoutConstraint.activate([
             highLightedBorderView.topAnchor.constraint(equalTo: contentView.topAnchor),
             highLightedBorderView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),

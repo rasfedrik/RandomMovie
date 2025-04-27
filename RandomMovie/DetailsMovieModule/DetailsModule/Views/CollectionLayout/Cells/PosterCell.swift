@@ -46,9 +46,10 @@ final class PosterCell: UICollectionViewCell, CustomCompositionLayoutCellProtoco
     
     // MARK: - Methods
     @objc private func starTapped() {
-        UIView.animate(withDuration: 0.3) {
-            self.favoriteButton.transform = CGAffineTransform(scaleX: 2, y: 2)
-            self.favoriteButton.transform = .identity
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.favoriteButton.transform = CGAffineTransform(scaleX: 2, y: 2)
+            strongSelf.favoriteButton.transform = .identity
         }
     }
     
